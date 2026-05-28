@@ -1,0 +1,104 @@
+/* PixelProof Styles */
+
+.pixelproof-overlay {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 999999;
+  opacity: 0;
+  transition: opacity 200ms ease;
+  pointer-events: none;
+}
+
+/* Show on hover of parent */
+*:hover > .pixelproof-overlay {
+  opacity: 1;
+}
+
+.pixelproof-scan-btn {
+  background: #4F46E5;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 200ms ease;
+}
+
+.pixelproof-scan-btn:hover {
+  transform: scale(1.1);
+}
+
+.pixelproof-badge {
+  min-width: 80px;
+  height: 28px;
+  border-radius: 14px;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 999999;
+  font: bold 11px system-ui, -apple-system, sans-serif;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0 10px;
+  transition: transform 200ms ease;
+}
+
+.pixelproof-badge:hover {
+  transform: scale(1.05);
+}
+
+.pixelproof-badge.fake { background: #EF4444; }
+.pixelproof-badge.suspicious { background: #F59E0B; }
+.pixelproof-badge.real { background: #22C55E; }
+.pixelproof-badge.error { background: #94A3B8; }
+
+.pixelproof-loading {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: pixelproof-spin 1s ease-in-out infinite;
+}
+
+@keyframes pixelproof-spin {
+  to { transform: rotate(360deg); }
+}
+
+.pixelproof-panel-iframe {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 340px;
+  height: 100vh;
+  border: none;
+  z-index: 2147483647; /* Max z-index */
+  box-shadow: -4px 0 20px rgba(0,0,0,0.3);
+}
+
+/* WhatsApp specific styles */
+.pixelproof-wa-chip {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(30, 27, 75, 0.9);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 4px 8px;
+  font-size: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 999;
+}
