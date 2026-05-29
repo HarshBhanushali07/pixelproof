@@ -1,0 +1,143 @@
+:root {
+  --primary: #4F46E5;
+  --primary-dark: #1E1B4B;
+  --ai-red: #EF4444;
+  --uncertain-yellow: #F59E0B;
+  --real-green: #22C55E;
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --surface: rgba(30, 27, 75, 0.95);
+}
+
+body {
+  margin: 0;
+  padding: 20px;
+  background: var(--surface);
+  backdrop-filter: blur(20px);
+  color: var(--text-primary);
+  font-family: system-ui, -apple-system, sans-serif;
+  height: 100vh;
+  box-sizing: border-box;
+  animation: slideIn 200ms ease;
+  overflow-y: auto;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.brand {
+  font-weight: bold;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#closeBtn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.verdict-container {
+  margin-bottom: 24px;
+}
+
+#verdictText {
+  margin: 0 0 12px 0;
+  font-size: 28px;
+}
+
+.confidence-wrapper {
+  background: rgba(255,255,255,0.1);
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.confidence-bar {
+  width: 0%;
+  height: 100%;
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.section {
+  margin-bottom: 24px;
+}
+
+.section h3 {
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+#explanationText {
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.chip {
+  display: inline-block;
+  background: rgba(255,255,255,0.1);
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.fact-item {
+  background: rgba(0,0,0,0.2);
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.fact-item a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.actions button {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 200ms ease;
+}
+
+.actions button:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+#btnReverse {
+  background: var(--primary);
+}
+
+#btnReverse:hover {
+  background: #4338ca;
+}
