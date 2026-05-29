@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="header">
+    <div class="brand">🛡 PixelProof</div>
+    <div id="siteDomain" class="domain">example.com</div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-box">
+      <div class="stat-num" id="imgFound">0</div>
+      <div class="stat-label">Found</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" id="imgScanned">0</div>
+      <div class="stat-label">Scanned</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" id="imgFlagged">0</div>
+      <div class="stat-label">Flagged</div>
+    </div>
+  </div>
+
+  <div class="trust-score-container">
+    <svg class="gauge" viewBox="0 0 100 50">
+      <path class="gauge-bg" d="M 10 50 A 40 40 0 0 1 90 50"></path>
+      <path class="gauge-fill" id="trustGauge" d="M 10 50 A 40 40 0 0 1 90 50"></path>
+    </svg>
+    <div class="score-text">
+      <span id="trustScore">100</span>
+      <small>Trust Score</small>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button id="btnScanAll" class="primary-btn">Scan All Images</button>
+    <label class="toggle">
+      <span>Auto-Scan</span>
+      <input type="checkbox" id="autoScanToggle">
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <div class="flagged-section">
+    <h3>Flagged Images</h3>
+    <div id="flaggedList" class="flagged-list">
+      <!-- Items will be injected here -->
+    </div>
+  </div>
+
+  <div class="footer">
+    <span id="apiUsage">API: 0/50</span>
+    <span>v1.0.0</span>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
