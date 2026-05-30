@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-label="PixelProof dashboard preview">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#09111f"/>
+      <stop offset="100%" stop-color="#111b33"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1c2a4a"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" rx="40" fill="url(#bg)"/>
+  <rect x="70" y="60" width="1460" height="780" rx="34" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.08)"/>
+  <rect x="110" y="110" width="1380" height="92" rx="24" fill="rgba(255,255,255,0.06)"/>
+  <circle cx="170" cy="156" r="18" fill="#22c55e"/>
+  <circle cx="210" cy="156" r="18" fill="#f59e0b"/>
+  <circle cx="250" cy="156" r="18" fill="#ef4444"/>
+  <text x="310" y="166" fill="#e2e8f0" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="34" font-weight="700">PixelProof</text>
+  <rect x="1110" y="132" width="340" height="48" rx="24" fill="rgba(124,58,237,0.18)" stroke="rgba(124,58,237,0.45)"/>
+  <text x="1170" y="164" fill="#c4b5fd" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="24">AI-generated image detector</text>
+
+  <rect x="110" y="240" width="420" height="530" rx="28" fill="url(#card)"/>
+  <text x="150" y="300" fill="#f8fafc" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="30" font-weight="700">Overall Verdict</text>
+  <rect x="150" y="340" width="340" height="110" rx="24" fill="rgba(34,197,94,0.16)"/>
+  <text x="190" y="405" fill="#86efac" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="46" font-weight="800">Likely Genuine</text>
+  <text x="150" y="510" fill="#cbd5e1" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="24">Confidence</text>
+  <rect x="150" y="540" width="340" height="18" rx="9" fill="#1f2937"/>
+  <rect x="150" y="540" width="250" height="18" rx="9" fill="url(#accent)"/>
+  <text x="150" y="615" fill="#cbd5e1" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="24">Key signals</text>
+  <text x="150" y="655" fill="#e2e8f0" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="21">• Lighting consistent</text>
+  <text x="150" y="695" fill="#e2e8f0" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="21">• Metadata matches content</text>
+  <text x="150" y="735" fill="#e2e8f0" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="21">• No obvious artifacts</text>
+
+  <rect x="570" y="240" width="920" height="250" rx="28" fill="url(#card)"/>
+  <text x="610" y="300" fill="#f8fafc" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="30" font-weight="700">Explanation</text>
+  <text x="610" y="350" fill="#cbd5e1" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="24">The image looks consistent with a real photo: shadows align, edges are clean,</text>
+  <text x="610" y="386" fill="#cbd5e1" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="24">and the model did not flag strong synthetic patterns.</text>
+  <rect x="610" y="420" width="360" height="34" rx="17" fill="rgba(6,182,212,0.16)"/>
+  <text x="635" y="444" fill="#67e8f9" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="20">Fact-check lookup: no related claims found</text>
+
+  <rect x="570" y="520" width="920" height="250" rx="28" fill="url(#card)"/>
+  <text x="610" y="580" fill="#f8fafc" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="30" font-weight="700">Scan Results</text>
+  <rect x="610" y="620" width="250" height="110" rx="22" fill="rgba(99,102,241,0.16)"/>
+  <text x="650" y="665" fill="#c7d2fe" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="22" font-weight="700">25 images</text>
+  <text x="650" y="702" fill="#e2e8f0" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="18">cached for fast rescans</text>
+  <rect x="890" y="620" width="250" height="110" rx="22" fill="rgba(244,63,94,0.16)"/>
+  <text x="930" y="665" fill="#fecdd3" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="22" font-weight="700">2 flagged</text>
+  <text x="930" y="702" fill="#e2e8f0" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="18">high-risk images</text>
+  <rect x="1170" y="620" width="250" height="110" rx="22" fill="rgba(34,197,94,0.16)"/>
+  <text x="1210" y="665" fill="#bbf7d0" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="22" font-weight="700">1 fallback</text>
+  <text x="1210" y="702" fill="#e2e8f0" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="18">network-safe demo mode</text>
+</svg>

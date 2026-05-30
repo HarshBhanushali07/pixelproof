@@ -1,8 +1,21 @@
 # PixelProof
 
-PixelProof is a Chrome extension hackathon project that scans images on any page, tries to classify whether they are AI-generated or manipulated, explains the result in plain English, and cross-checks likely claims against fact-check data.
+[![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)](https://developer.chrome.com/docs/extensions/)
+[![Manifest V3](https://img.shields.io/badge/Manifest-V3-7c3aed?style=for-the-badge)](https://developer.chrome.com/docs/extensions/develop/migrate/what-is-mv3)
+[![Hackathon Ready](https://img.shields.io/badge/Hackathon-Ready-06b6d4?style=for-the-badge)](#demo-flow)
+[![Demo Safe](https://img.shields.io/badge/Demo-Safe-22c55e?style=for-the-badge)](#testing-checklist)
 
-It is built to be demo-friendly: if a network API fails, the extension falls back to a simulated verdict so the presentation keeps moving.
+PixelProof is a Chrome extension hackathon project that scans images on any page, classifies whether they look AI-generated or manipulated, explains the result in plain English, and cross-checks likely claims against fact-check data.
+
+It is built to be judge-friendly: if a network API fails, the extension falls back to a simulated verdict so the presentation keeps moving.
+
+## Winner-ready highlights
+- Live image scanning inside the browser
+- Clear verdicts, confidence, and plain-English explanations
+- Fact-check context when a claim looks suspicious
+- Fast rescans through caching and request dedupe
+- Local-key workflow for safer demos
+- Reliable fallback mode for flaky networks or blocked APIs
 
 ## What this project shows
 - Browser-native image scanning inside Chrome
@@ -16,6 +29,14 @@ It is built to be demo-friendly: if a network API fails, the extension falls bac
 If a judge asks what PixelProof does, say this:
 
 > PixelProof is a browser extension that helps people spot AI-generated or manipulated images in real time, explains the suspicious parts in simple language, and checks whether related claims have already been fact-checked.
+
+## Screenshot gallery
+
+| Dashboard | Image overlay | Settings |
+|---|---|---|
+| ![Dashboard preview](assets/dashboard-preview.svg) | ![Overlay preview](assets/overlay-preview.svg) | ![Settings preview](assets/settings-preview.svg) |
+
+Use these previews in the README and demo deck. Replace them with real screenshots later if you want exact UI captures.
 
 ## Demo flow
 1. Open a page with multiple images.
@@ -169,6 +190,13 @@ PixelProof intentionally falls back to simulated detection if a key is missing s
 - Open the Settings page and show local key storage
 - Mention the fallback path for unreliable network conditions
 
+## Judge script
+1. “PixelProof scans images right in Chrome.”
+2. “It explains why an image looks suspicious in simple language.”
+3. “It checks related claims against fact-check sources.”
+4. “It still works in demo conditions because it has safe fallback mode.”
+5. “It caches scans so repeated checks are instant.”
+
 ## Security
 - Real keys should stay local only
 - `.env` and `config.js` are ignored by Git
@@ -181,8 +209,14 @@ PixelProof gives judges a clear story:
 - solution: a browser-native assistant that flags suspicious images in context
 - demo value: easy to show, easy to understand, graceful under API failures
 
+## Why it stands out
+- Looks great in a live demo
+- Explains complex results clearly
+- Handles failure gracefully instead of breaking
+- Feels like a real product, not just a prototype
+
 ## Next improvements
-- Add screenshot support for the README and pitch deck
+- Replace the preview SVGs with real screenshots from the live extension
 - Add a backend proxy for image uploads to reduce CORS issues
 - Add tests for the API helpers and scan flow
 - Add encrypted key storage if you want a stronger local-secret model
