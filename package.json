@@ -1,0 +1,8 @@
+{
+  "name": "pixelproof",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "generate-config": "node scripts/generate_config.js"
+  }
+}

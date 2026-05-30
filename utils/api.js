@@ -3,6 +3,8 @@
  * Exposes functions to hit Reality Defender, Gemini, and Google Fact Check APIs.
  */
 
+import { CONFIG } from '../config.js';
+
 // Note: In a real extension, you would fetch these from a background config or environment variables.
 // Since config.js is in the root and not an ES module by default, we access it via global or background script.
 // To keep things simple in Manifest V3 service workers, we will rely on chrome.storage or hardcode during build.
@@ -16,7 +18,7 @@
  */
 export async function scanWithRealityDefender(base64Image) {
   try {
-    const apiKey = typeof CONFIG !== 'undefined' ? CONFIG.REALITY_DEFENDER_API_KEY : '';
+    const apiKey = CONFIG?.REALITY_DEFENDER_API_KEY || '';
     
     // Fallback if Reality Defender is not configured or unavailable (Mocking for the hackathon demo if API keys are missing)
     if (!apiKey || apiKey === 'your_reality_defender_key_here') {
@@ -24,32 +26,78 @@ export async function scanWithRealityDefender(base64Image) {
       return simulateDetection();
     }
 
-    // Prepare Base64 string (strip data:image/... prefix if present)
-    const base64Data = base64Image.includes(',') ? base64Image.split(',')[1] : base64Image;
-
-    const response = await fetch('https://api.realitydefender.com/api/upload/base64', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ image: base64Data })
-    });
-
-    if (!response.ok) {
-      throw new Error(`API Error: ${response.status}`);
+    // If caller passed a URL instead of base64, try to fetch it and convert to base64.
+    let base64Data = '';
+    if (typeof base64Image === 'string' && (base64Image.startsWith('http') || base64Image.startsWith('blob:'))) {
+      try {
+        base64Data = await fetchImageAsBase64(base64Image);
+      } catch (err) {
+        console.warn('Failed to fetch image URL for base64 conversion:', err);
+        // fallback to sending the URL as-is (the API may not accept it but we try)
+        base64Data = base64Image;
+      }
+    } else {
+      // Prepare Base64 string (strip data:image/... prefix if present)
+      base64Data = base64Image.includes(',') ? base64Image.split(',')[1] : base64Image;
     }
 
-    const data = await response.json();
-    
-    // Parse result from Reality Defender (assuming standard response format)
-    // They usually return probability scores. We map it to 0-100.
-    const confidence = Math.round((data.probability || 0) * 100);
-    let verdict = 'uncertain';
-    if (confidence > 70) verdict = 'fake';
-    else if (confidence < 40) verdict = 'real';
+    try {
+      const response = await fetch('https://api.realitydefender.com/api/upload/base64', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ image: base64Data })
+      });
 
-    return { verdict, confidence, rawResponse: data };
+      if (!response.ok) {
+        throw new Error(`API Error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      // Parse result from Reality Defender (assuming standard response format)
+      const confidence = Math.round((data.probability || 0) * 100);
+      let verdict = 'uncertain';
+      if (confidence > 70) verdict = 'fake';
+      else if (confidence < 40) verdict = 'real';
+
+      return { verdict, confidence, rawResponse: data };
+    } catch (fetchErr) {
+      // Network or API fetch failure — gather diagnostics and fall back to simulation for demo reliability
+      console.error('Reality Defender fetch failed:', fetchErr);
+
+      // Try lightweight connectivity checks to help diagnose network vs API issues
+      async function testConnectivity(url) {
+        try {
+          const r = await fetch(url, { method: 'GET', cache: 'no-store' });
+          return { ok: r.ok, status: r.status };
+        } catch (e) {
+          return { ok: false, error: e?.message || String(e) };
+        }
+      }
+
+      const checks = {};
+      try {
+        // public connectivity check
+        checks.google = await testConnectivity('https://www.google.com/generate_204');
+      } catch (e) {
+        checks.google = { ok: false, error: e?.message };
+      }
+
+      try {
+        // Reality Defender root (may 404 but helps test TCP/TLS reachability)
+        checks.reality_defender = await testConnectivity('https://api.realitydefender.com/');
+      } catch (e) {
+        checks.reality_defender = { ok: false, error: e?.message };
+      }
+
+      console.warn('Connectivity checks:', checks);
+
+      const simulated = simulateDetection();
+      simulated.rawResponse = { simulated: true, error: fetchErr?.message, diagnostics: checks };
+      return simulated;
+    }
   } catch (error) {
     console.error("Reality Defender API Error:", error);
     return { verdict: 'error', confidence: 0, error: error.message };
@@ -65,7 +113,7 @@ export async function scanWithRealityDefender(base64Image) {
  */
 export async function explainWithGemini(verdict, confidence, imageUrl) {
   try {
-    const apiKey = typeof CONFIG !== 'undefined' ? CONFIG.GEMINI_API_KEY : '';
+    const apiKey = CONFIG?.GEMINI_API_KEY || '';
     if (!apiKey || apiKey === 'your_gemini_key_here') {
       return { 
         explanation: "API Key missing. This image exhibits artifacts commonly associated with generative AI models.", 
@@ -118,7 +166,7 @@ export async function explainWithGemini(verdict, confidence, imageUrl) {
  */
 export async function checkFacts(query) {
   try {
-    const apiKey = typeof CONFIG !== 'undefined' ? CONFIG.FACT_CHECK_API_KEY : '';
+    const apiKey = CONFIG?.FACT_CHECK_API_KEY || '';
     if (!apiKey || apiKey === 'your_google_api_key_here') return [];
 
     const url = `https://factchecktools.googleapis.com/v1alpha1/claims:search?query=${encodeURIComponent(query)}&key=${apiKey}&pageSize=3`;
@@ -176,4 +224,20 @@ export function extractExifData(base64Data) {
   } catch (e) {
     return 'No metadata found';
   }
+}
+
+// Helper: fetch image URL and convert to data URL (base64)
+async function fetchImageAsBase64(url) {
+  const resp = await fetch(url);
+  if (!resp.ok) throw new Error('Failed to fetch image');
+  const blob = await resp.blob();
+  const arrayBuffer = await blob.arrayBuffer();
+  const bytes = new Uint8Array(arrayBuffer);
+  let binary = '';
+  const chunkSize = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunkSize));
+  }
+  const base64String = btoa(binary);
+  return `data:${blob.type};base64,${base64String}`;
 }

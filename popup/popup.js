@@ -16,10 +16,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // Handle Scan All
-  document.getElementById('btnScanAll').addEventListener('click', () => {
-    if (tab) {
-      chrome.tabs.sendMessage(tab.id, { action: 'scanAllImages' });
-    }
+  document.getElementById('btnScanAll').addEventListener('click', async () => {
+    if (!tab) return;
+
+    chrome.tabs.sendMessage(tab.id, { action: 'scanAllImages' }, (res) => {
+      if (chrome.runtime.lastError) {
+        // Content script might not be injected (rare). Attempt to inject and retry.
+        chrome.scripting.executeScript({
+          target: { tabId: tab.id },
+          files: ['content.js']
+        }, () => {
+          chrome.tabs.sendMessage(tab.id, { action: 'scanAllImages' }, () => {});
+        });
+      }
+    });
   });
 
   // Handle Auto-Scan toggle

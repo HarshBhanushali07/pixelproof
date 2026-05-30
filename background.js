@@ -11,55 +11,126 @@ import { scanWithRealityDefender, explainWithGemini, checkFacts, extractExifData
 import './config.js'; // This will fail if config.js doesn't export. 
 // Let's assume the user will make it work or we fallback gracefully (api.js already handles missing keys).
 
+// Track in-flight scans to dedupe concurrent requests for the same image
+const inFlightScans = new Map();
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'scanImage') {
-    handleScanImage(request.imageUrl, request.imageBase64, request.pageUrl).then(sendResponse);
+    handleScanImage(request.imageUrl, request.imageBase64, request.pageUrl).then(sendResponse).catch((err) => {
+      console.error('handleScanImage error', err);
+      sendResponse({ verdict: 'error', confidence: 0, error: err?.message });
+    });
     return true; // Keep message channel open for async
   }
   
   if (request.action === 'getPageStats') {
-    // Send message to active tab
-    chrome.tabs.sendMessage(request.tabId, { action: 'getStats' }, (res) => {
-      sendResponse(res);
+    // Send message to tab; if no receiver, attempt to inject content script then retry
+    sendMessageToTab(request.tabId, { action: 'getStats' }).then((res) => sendResponse(res)).catch((err) => {
+      console.warn('getPageStats send failed', err);
+      sendResponse({ error: 'no_receiver' });
     });
     return true;
   }
 });
 
+// Helper: send a message to a tab, injecting content.js if the tab has no listener.
+function sendMessageToTab(tabId, message, retry = true) {
+  return new Promise((resolve, reject) => {
+    chrome.tabs.sendMessage(tabId, message, async (res) => {
+      if (chrome.runtime.lastError) {
+        // No receiver in the tab. Try injecting content script (only once).
+        if (!retry) return reject(chrome.runtime.lastError.message);
+        try {
+          await new Promise((ok, fail) => {
+            chrome.scripting.executeScript({ target: { tabId }, files: ['content.js'] }, () => {
+              if (chrome.runtime.lastError) return fail(chrome.runtime.lastError);
+              ok();
+            });
+          });
+        } catch (e) {
+          return reject(e);
+        }
+
+        // Retry once
+        chrome.tabs.sendMessage(tabId, message, (res2) => {
+          if (chrome.runtime.lastError) return reject(chrome.runtime.lastError.message);
+          resolve(res2);
+        });
+      } else {
+        resolve(res);
+      }
+    });
+  });
+}
+
 async function handleScanImage(imageUrl, imageBase64, pageUrl) {
-  // Check Cache
-  const cached = await getCache(imageUrl);
-  if (cached) return cached;
+  // Use imageUrl as key for cache/in-flight dedupe; fallback to a trimmed base64 key
+  const key = imageUrl || (typeof imageBase64 === 'string' ? ('base64:' + imageBase64.slice(0, 80)) : 'unknown');
 
-  // 0. Quick EXIF Check
-  const exifMetadata = extractExifData(imageBase64 || '');
+  // If a scan for this key is already in flight, return its promise
+  if (inFlightScans.has(key)) {
+    try {
+      return await inFlightScans.get(key);
+    } catch (e) {
+      // continue to attempt a new scan if previous failed
+      inFlightScans.delete(key);
+    }
+  }
 
-  // 1. Reality Defender
-  let detection = await scanWithRealityDefender(imageBase64 || imageUrl);
-  if (detection.verdict === 'error') return detection;
+  const scanPromise = (async () => {
+    // Check Cache
+    try {
+      const cached = imageUrl ? await getCache(imageUrl) : null;
+      if (cached) return cached;
+    } catch (e) {
+      console.warn('Cache get failed', e);
+    }
 
-  // 2. Gemini Explanation
-  const gemini = await explainWithGemini(detection.verdict, detection.confidence, imageUrl);
+    // 0. Quick EXIF Check
+    const exifMetadata = extractExifData(imageBase64 || '');
 
-  // 3. Fact Check
-  // Use hostname of image or page as query, or some derived text. 
-  // For demo, we just pass something generic or empty if we don't have context.
-  const facts = await checkFacts('deepfake image');
+    // 1. Reality Defender
+    let detection = await scanWithRealityDefender(imageBase64 || imageUrl);
+    if (detection.verdict === 'error') return detection;
 
-  const result = {
-    verdict: detection.verdict,
-    confidence: detection.confidence,
-    explanation: gemini.explanation,
-    aiSource: gemini.aiSource,
-    facts: facts,
-    pageUrl: pageUrl,
-    exif: exifMetadata
-  };
+    // 2. Gemini Explanation
+    const gemini = await explainWithGemini(detection.verdict, detection.confidence, imageUrl);
 
-  // Save Cache
-  await setCache(imageUrl, result);
+    // 3. Fact Check
+    const facts = await checkFacts('deepfake image');
 
-  return result;
+    const result = {
+      verdict: detection.verdict,
+      confidence: detection.confidence,
+      explanation: gemini.explanation,
+      aiSource: gemini.aiSource,
+      facts: facts,
+      imageUrl: imageUrl,
+      pageUrl: pageUrl,
+      exif: exifMetadata
+    };
+
+    // Save Cache if we have a usable imageUrl
+    if (imageUrl) {
+      try {
+        await setCache(imageUrl, result);
+      } catch (e) {
+        console.warn('Cache set failed', e);
+      }
+    }
+
+    return result;
+  })();
+
+  // Store in-flight promise
+  inFlightScans.set(key, scanPromise);
+
+  try {
+    const res = await scanPromise;
+    return res;
+  } finally {
+    inFlightScans.delete(key);
+  }
 }
 
 chrome.runtime.onInstalled.addListener(() => {
@@ -72,10 +143,9 @@ chrome.runtime.onInstalled.addListener(() => {
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === "scan-pixelproof") {
-    // Send message to content script to scan this specific image
-    chrome.tabs.sendMessage(tab.id, {
-      action: "scanContextMenu",
-      srcUrl: info.srcUrl
+    // Send message to content script to scan this specific image (inject if needed)
+    sendMessageToTab(tab.id, { action: 'scanContextMenu', srcUrl: info.srcUrl }).catch((e) => {
+      console.warn('Context menu message failed', e);
     });
   }
 });

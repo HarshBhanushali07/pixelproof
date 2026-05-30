@@ -19,6 +19,27 @@
 4. Click "Load Unpacked" and select the `pixelproof-1` folder.
 5. Create a `config.js` file from the template and add your API keys.
 
+## Managing API keys (secure local workflow)
+The extension reads API keys from a generated `config.js` file. Do NOT commit your real keys.
+
+1. Copy `.env.example` to `.env` and fill in your keys:
+
+	- `REALITY_DEFENDER_API_KEY`
+	- `GEMINI_API_KEY`
+	- `FACT_CHECK_API_KEY`
+
+2. Generate `config.js`:
+
+```bash
+node scripts/generate_config.js
+```
+
+This will create a `config.js` file at the project root that exports `CONFIG` used by the extension. `config.js` and `.env` are ignored by Git.
+
+3. Reload the extension in `chrome://extensions`.
+
+For CI or automated builds, set environment variables and run the same `scripts/generate_config.js` step in your pipeline before packaging.
+
 ## API Keys Setup
 1. Copy `config.example.js` and rename it to `config.js`.
 2. Get a **Reality Defender API key** (free, 50/mo) from realitydefender.com.

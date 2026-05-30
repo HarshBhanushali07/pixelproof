@@ -12,3 +12,4 @@ reference_repo/
 docs/
 TruthLens_PRD.docx
 prd_extracted.txt
+.env.local
