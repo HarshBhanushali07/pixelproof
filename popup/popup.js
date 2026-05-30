@@ -46,6 +46,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     const count = Object.keys(items).filter(k => k.startsWith('http')).length;
     document.getElementById('apiUsage').innerText = `API: ${count}/50`;
   });
+
+  // Settings button
+  const settingsBtn = document.getElementById('settingsBtn');
+  if (settingsBtn) {
+    settingsBtn.addEventListener('click', () => {
+      if (chrome.runtime.openOptionsPage) chrome.runtime.openOptionsPage();
+      else chrome.tabs.create({ url: 'options/options.html' });
+    });
+  }
 });
 
 function updateStats(stats) {

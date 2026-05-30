@@ -28,6 +28,10 @@
   "action": {
     "default_popup": "popup/popup.html"
   },
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
+  },
   "web_accessible_resources": [
     {
       "resources": ["panel/panel.html", "panel/panel.css", "panel/panel.js"],

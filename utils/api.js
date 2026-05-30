@@ -5,6 +5,18 @@
 
 import { CONFIG } from '../config.js';
 
+// Prefer keys stored in chrome.storage.local (set via Options page). Fallback to config.js values.
+async function getRuntimeConfig() {
+  if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+    return new Promise((resolve) => {
+      chrome.storage.local.get(['REALITY_DEFENDER_API_KEY','GEMINI_API_KEY','FACT_CHECK_API_KEY'], (items) => {
+        resolve(items || {});
+      });
+    });
+  }
+  return {};
+}
+
 // Note: In a real extension, you would fetch these from a background config or environment variables.
 // Since config.js is in the root and not an ES module by default, we access it via global or background script.
 // To keep things simple in Manifest V3 service workers, we will rely on chrome.storage or hardcode during build.
@@ -18,7 +30,8 @@ import { CONFIG } from '../config.js';
  */
 export async function scanWithRealityDefender(base64Image) {
   try {
-    const apiKey = CONFIG?.REALITY_DEFENDER_API_KEY || '';
+    const stored = await getRuntimeConfig();
+    const apiKey = stored.REALITY_DEFENDER_API_KEY || CONFIG?.REALITY_DEFENDER_API_KEY || '';
     
     // Fallback if Reality Defender is not configured or unavailable (Mocking for the hackathon demo if API keys are missing)
     if (!apiKey || apiKey === 'your_reality_defender_key_here') {
@@ -113,7 +126,8 @@ export async function scanWithRealityDefender(base64Image) {
  */
 export async function explainWithGemini(verdict, confidence, imageUrl) {
   try {
-    const apiKey = CONFIG?.GEMINI_API_KEY || '';
+    const stored = await getRuntimeConfig();
+    const apiKey = stored.GEMINI_API_KEY || CONFIG?.GEMINI_API_KEY || '';
     if (!apiKey || apiKey === 'your_gemini_key_here') {
       return { 
         explanation: "API Key missing. This image exhibits artifacts commonly associated with generative AI models.", 
@@ -166,7 +180,8 @@ export async function explainWithGemini(verdict, confidence, imageUrl) {
  */
 export async function checkFacts(query) {
   try {
-    const apiKey = CONFIG?.FACT_CHECK_API_KEY || '';
+    const stored = await getRuntimeConfig();
+    const apiKey = stored.FACT_CHECK_API_KEY || CONFIG?.FACT_CHECK_API_KEY || '';
     if (!apiKey || apiKey === 'your_google_api_key_here') return [];
 
     const url = `https://factchecktools.googleapis.com/v1alpha1/claims:search?query=${encodeURIComponent(query)}&key=${apiKey}&pageSize=3`;
