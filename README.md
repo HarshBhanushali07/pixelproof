@@ -10,6 +10,8 @@
 
 [![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)](https://developer.chrome.com/docs/extensions/)
 [![Manifest V3](https://img.shields.io/badge/Manifest-V3-7c3aed?style=for-the-badge)](https://developer.chrome.com/docs/extensions/develop/migrate/what-is-mv3)
+[![Version](https://img.shields.io/badge/Version-1.0.0-111827?style=for-the-badge)](#)
+[![Browser Support](https://img.shields.io/badge/Browser-Chrome%20%2B%20Edge-4285F4?style=for-the-badge)](#browser-support)
 [![Reality Defender](https://img.shields.io/badge/Reality_Defender-API-ef4444?style=for-the-badge)](https://www.realitydefender.com/)
 [![Gemini AI](https://img.shields.io/badge/Gemini-AI-1a73e8?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
 [![Google Fact Check](https://img.shields.io/badge/Google-Fact_Check-34a853?style=for-the-badge&logo=google&logoColor=white)](https://developers.google.com/fact-check)
@@ -43,6 +45,47 @@ In 2024, AI-generated images spread as "real" news across every platform. Synthe
 | ⚡ **Smart Caching** | Results stored locally — rescans are instant |
 | 🛡️ **Graceful Fallback** | Works even when APIs are down — demo never breaks |
 | 🔑 **Local Key Storage** | API keys stay on your machine via `chrome.storage.local` |
+
+---
+
+## 🖥️ Browser Support
+
+PixelProof is built for Chromium browsers that support Manifest V3.
+
+- Chrome 109+ on desktop
+- Microsoft Edge 109+ on desktop
+- Best viewed on desktop screens with DevTools available for the demo
+
+Firefox and Safari are not supported in this repo because the extension uses Chrome-specific MV3 APIs and storage behavior.
+
+---
+
+## ⚠️ Limitations
+
+PixelProof is useful for demos and real-world triage, but it is not a perfect truth machine.
+
+- It can only analyze images it can access on the page or through uploaded files.
+- Cross-origin images may be limited by browser canvas security rules.
+- API results depend on the connected services and can vary by model/provider.
+- The fallback mode is intentionally simulated so demos keep working offline.
+- This repo demonstrates the workflow, not a legally authoritative verdict system.
+
+---
+
+## 🚀 Run Locally
+
+1. Clone the repository.
+    ```bash
+    git clone https://github.com/YOUR_USERNAME/pixelproof.git
+    cd pixelproof
+    ```
+2. Open `chrome://extensions` in Chrome or Edge.
+3. Enable **Developer mode** using the toggle in the top-right corner.
+4. Click **Load unpacked** and select the `pixelproof/` folder.
+5. The PixelProof extension should appear in the toolbar.
+6. Open the extension, add your API keys in Settings, and reload the extension if needed.
+
+If you want the demo-safe experience, you can leave the keys empty and use the built-in fallback mode.
 
 ---
 
@@ -254,10 +297,11 @@ pixelproof/
 
 ### 1. Load Extension in Chrome
 
-```bash
-# Clone the repo
-git clone https://github.com/YOUR_USERNAME/pixelproof.git
-```
+1. Clone the repo and open the folder locally.
+2. Visit `chrome://extensions`.
+3. Turn on **Developer mode**.
+4. Click **Load unpacked** and choose the project folder.
+5. Confirm the PixelProof icon appears in the toolbar.
 
 1. Go to `chrome://extensions`
 2. Enable **Developer mode** (top right toggle)
