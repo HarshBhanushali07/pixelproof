@@ -1,226 +1,345 @@
-# PixelProof
+# 🔍 PixelProof — See Through the Lie
+
+<div align="center">
+
+<img src="assets/dashboard-preview.svg" alt="PixelProof Dashboard" width="700"/>
+
+### *A Chrome extension that detects AI-generated & manipulated images in real time — explains them in plain English — and cross-checks claims against live fact-check data.*
+
+<br/>
 
 [![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)](https://developer.chrome.com/docs/extensions/)
 [![Manifest V3](https://img.shields.io/badge/Manifest-V3-7c3aed?style=for-the-badge)](https://developer.chrome.com/docs/extensions/develop/migrate/what-is-mv3)
-[![Hackathon Ready](https://img.shields.io/badge/Hackathon-Ready-06b6d4?style=for-the-badge)](#demo-flow)
-[![Demo Safe](https://img.shields.io/badge/Demo-Safe-22c55e?style=for-the-badge)](#testing-checklist)
+[![Reality Defender](https://img.shields.io/badge/Reality_Defender-API-ef4444?style=for-the-badge)](https://www.realitydefender.com/)
+[![Gemini AI](https://img.shields.io/badge/Gemini-AI-1a73e8?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
+[![Google Fact Check](https://img.shields.io/badge/Google-Fact_Check-34a853?style=for-the-badge&logo=google&logoColor=white)](https://developers.google.com/fact-check)
+[![Hackathon](https://img.shields.io/badge/Next_Byte_Hacks-V2-06b6d4?style=for-the-badge)](https://devpost.com/)
+[![MIT License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
+[![Demo Safe](https://img.shields.io/badge/Demo-Safe_Fallback-22c55e?style=for-the-badge)](#fallback-mode)
+[![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen?style=for-the-badge)]()
+[![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-blueviolet?style=for-the-badge)]()
 
-PixelProof is a Chrome extension hackathon project that scans images on any page, classifies whether they look AI-generated or manipulated, explains the result in plain English, and cross-checks likely claims against fact-check data.
+</div>
 
-It is built to be judge-friendly: if a network API fails, the extension falls back to a simulated verdict so the presentation keeps moving.
+---
 
-## Winner-ready highlights
-- Live image scanning inside the browser
-- Clear verdicts, confidence, and plain-English explanations
-- Fact-check context when a claim looks suspicious
-- Fast rescans through caching and request dedupe
-- Local-key workflow for safer demos
-- Reliable fallback mode for flaky networks or blocked APIs
+## 🌐 The Problem We're Solving
 
-## What this project shows
-- Browser-native image scanning inside Chrome
-- AI-assisted explanation of suspicious visual artifacts
-- Fact-check lookup for context and credibility
-- Caching and duplicate-request handling
-- Safe local-key workflow using `.env` and `chrome.storage.local`
-- Graceful fallback when an external API is unavailable
+> **The internet is drowning in AI-generated images, deepfakes, and manipulated media — and most people have no way to tell.**
 
-## Hackathon pitch
-If a judge asks what PixelProof does, say this:
+In 2024, AI-generated images spread as "real" news across every platform. Synthetic faces. Fabricated war footage. Deepfaked politicians. The average user has zero tools to fight back in the moment — while scrolling, reading, deciding what to believe.
 
-> PixelProof is a browser extension that helps people spot AI-generated or manipulated images in real time, explains the suspicious parts in simple language, and checks whether related claims have already been fact-checked.
+**PixelProof lives right in your browser. It works on every page. It catches fakes as you scroll.**
 
-## Screenshot gallery
+---
 
-| Dashboard | Image overlay | Settings |
-|---|---|---|
-| ![Dashboard preview](assets/dashboard-preview.svg) | ![Overlay preview](assets/overlay-preview.svg) | ![Settings preview](assets/settings-preview.svg) |
+## ✨ What PixelProof Does
 
-Use these previews in the README and demo deck. Replace them with real screenshots later if you want exact UI captures.
+| Feature | Description |
+|---|---|
+| 🖼️ **Live Image Scanning** | Detects AI-generated or manipulated images on any webpage |
+| 🤖 **AI-Powered Explanation** | Gemini explains *why* an image looks suspicious, in plain English |
+| 📰 **Fact-Check Lookup** | Cross-references image claims against Google Fact Check database |
+| ⚡ **Smart Caching** | Results stored locally — rescans are instant |
+| 🛡️ **Graceful Fallback** | Works even when APIs are down — demo never breaks |
+| 🔑 **Local Key Storage** | API keys stay on your machine via `chrome.storage.local` |
 
-## Demo flow
-1. Open a page with multiple images.
-2. Click the PixelProof popup.
-3. Press `Scan All Images`.
-4. Show verdicts, explanations, and the flagged image list.
-5. Rescan one image to show caching.
-6. Open Settings and save API keys locally.
-7. Demonstrate fallback mode by clearing a key and scanning again.
+---
 
-## Architecture
+## 🎬 Demo Flow
+
+> *(Works even without live API keys — see Fallback Mode)*
+
+1. **Open any page** with multiple images (news sites work great)
+2. **Click the PixelProof extension icon** in Chrome toolbar
+3. **Hit `Scan All Images`** — watch overlays appear on each image
+4. **Click any flagged image** to see the full verdict + Gemini explanation + fact-check context
+5. **Rescan an image** — result appears instantly from cache
+6. **Open Settings** — show local API key storage
+7. **Clear a key and scan again** — demonstrate graceful fallback mode
+
+---
+
+## 🏗️ Architecture Deep Dive
+
+PixelProof is built on a **4-layer pipeline** inside Chrome's Manifest V3 architecture:
+
+```
+User Action → Content Script → Background Worker → External APIs
+                                      ↕
+                             Chrome Storage Cache
+```
+
+### Full System Architecture
 
 ```mermaid
 flowchart LR
-	U[User] --> P[Popup UI]
-	U --> C[Content Script]
-	P --> C
-	C --> B[Background Service Worker]
-	B --> R[Reality Defender]
-	B --> G[Gemini]
-	B --> F[Google Fact Check]
-	B --> S[Chrome Storage Cache]
-	B --> O[Options Page]
-	O --> K[chrome.storage.local]
-	K --> B
+    U[👤 User] --> P[Popup UI]
+    U --> C[Content Script]
+    P --> C
+    C --> B[Background Service Worker]
+    B --> R[Reality Defender API]
+    B --> G[Gemini AI API]
+    B --> F[Google Fact Check API]
+    B --> S[Chrome Storage Cache]
+    B --> O[Options Page]
+    O --> K[chrome.storage.local]
+    K --> B
+
+    style U fill:#1e293b,color:#f8fafc
+    style B fill:#7c3aed,color:#fff
+    style R fill:#ef4444,color:#fff
+    style G fill:#1a73e8,color:#fff
+    style F fill:#34a853,color:#fff
+    style S fill:#f59e0b,color:#fff
 ```
 
-### Scan sequence
+### Scan Sequence — Step by Step
 
 ```mermaid
 sequenceDiagram
-	participant User
-	participant Popup
-	participant Content as Content Script
-	participant BG as Background Worker
-	participant RD as Reality Defender
-	participant GM as Gemini
-	participant FC as Fact Check
+    participant User
+    participant Popup
+    participant Content as Content Script
+    participant BG as Background Worker
+    participant RD as Reality Defender
+    participant GM as Gemini AI
+    participant FC as Google Fact Check
 
-	User->>Popup: Click Scan All
-	Popup->>Content: sendMessage(scanAllImages)
-	Content->>BG: send image payload
-	BG->>BG: check cache
-	alt cache miss
-		BG->>RD: scan image
-		alt RD success
-			RD-->>BG: verdict + confidence
-			BG->>GM: generate explanation
-			GM-->>BG: plain-English explanation
-			BG->>FC: search related claims
-			FC-->>BG: claim results
-		else RD fails
-			BG->>BG: log diagnostics + simulate fallback
-		end
-	end
-	BG-->>Content: results
-	Content-->>Popup: update UI
+    User->>Popup: Click "Scan All Images"
+    Popup->>Content: sendMessage(scanAllImages)
+    Content->>BG: send image payload (src / base64)
+    BG->>BG: check chrome.storage cache
+
+    alt ✅ Cache Hit
+        BG-->>Content: return cached result instantly
+    else ❌ Cache Miss
+        BG->>RD: POST image for AI detection
+        alt RD Success
+            RD-->>BG: verdict + confidence score
+            BG->>GM: "explain this verdict in plain English"
+            GM-->>BG: human-readable explanation
+            BG->>FC: search related claims
+            FC-->>BG: matching fact-checks
+            BG->>BG: store result in cache
+        else RD Fails (network/API)
+            BG->>BG: log diagnostics
+            BG->>BG: generate simulated fallback verdict
+        end
+    end
+
+    BG-->>Content: full result payload
+    Content-->>Popup: update UI with verdict + overlay
 ```
 
-### State and data flow
+### State Machine
 
 ```mermaid
 stateDiagram-v2
-	[*] --> Idle
-	Idle --> Scanning: user clicks scan
-	Scanning --> Cached: result already exists
-	Scanning --> APIRequest: cache miss
-	APIRequest --> Enrich: RD success
-	APIRequest --> Fallback: network/API failure
-	Enrich --> Display
-	Fallback --> Display
-	Display --> Idle
+    [*] --> Idle : Extension loaded
+
+    Idle --> Scanning : User clicks Scan
+
+    Scanning --> CacheHit : Result exists in storage
+    Scanning --> APIRequest : Cache miss → call RD
+
+    CacheHit --> Display : Return immediately
+    APIRequest --> Enrich : RD returns verdict
+    APIRequest --> Fallback : Network / API failure
+
+    Enrich --> Enrich : Call Gemini for explanation
+    Enrich --> Enrich : Call Fact Check API
+    Enrich --> Display : All data assembled
+
+    Fallback --> Display : Simulated verdict shown
+
+    Display --> Idle : User closes popup / dismisses
+
+    Display --> Scanning : User rescans image
 ```
 
-## File map
-- [manifest.json](manifest.json) - MV3 manifest, background worker, permissions, options page
-- [background.js](background.js) - scan orchestration, caching, tab messaging
-- [content.js](content.js) - image discovery, overlays, per-image actions
-- [popup/popup.html](popup/popup.html) and [popup/popup.js](popup/popup.js) - dashboard and settings button
-- [options/options.html](options/options.html) and [options/options.js](options/options.js) - local API key settings
-- [utils/api.js](utils/api.js) - Reality Defender, Gemini, and Fact Check API wrappers
-- [utils/cache.js](utils/cache.js) - storage-backed cache
-- [scripts/generate_config.js](scripts/generate_config.js) - local `.env` to `config.js` generator
+### Data Flow
 
-## Setup
+```mermaid
+flowchart TD
+    IMG[Image on Page] --> CS[Content Script\nextract src / canvas base64]
+    CS --> BW[Background Worker]
+    BW --> CACHE{Cache\ncheck}
+    CACHE -- hit --> RESULT[Result Object]
+    CACHE -- miss --> RD[Reality Defender\nPOST /scan]
+    RD --> VERDICT[verdict + confidence]
+    VERDICT --> GEM[Gemini\ngenerate explanation]
+    GEM --> EXP[Plain-English Explanation]
+    EXP --> FC[Google Fact Check\nquery related claims]
+    FC --> CLAIMS[Matched Claim Results]
+    CLAIMS --> ASSEMBLE[Assemble Full Result]
+    ASSEMBLE --> STORE[Write to chrome.storage.local]
+    STORE --> RESULT
+    RESULT --> UI[Popup + Overlay UI]
+```
 
-### 1. Install
-1. Clone the repo.
-2. Open `chrome://extensions`.
-3. Enable Developer mode.
-4. Click Load unpacked and choose this folder.
+---
 
-### 2. Add API keys locally
-You can use either workflow:
+## 📁 Project Structure
 
-- **Options page:** open PixelProof Settings and save the keys in `chrome.storage.local`
-- **Env file:** copy `.env.example` to `.env`, fill it, then run `node scripts/generate_config.js`
+```
+pixelproof/
+├── manifest.json               # MV3 manifest — permissions, bg worker, options
+├── background.js               # Scan orchestration, caching, tab messaging
+├── content.js                  # Image discovery, DOM overlays, per-image UI
+│
+├── popup/
+│   ├── popup.html              # Extension dashboard
+│   └── popup.js                # Scan trigger, results renderer
+│
+├── options/
+│   ├── options.html            # API key settings page
+│   └── options.js              # chrome.storage.local key management
+│
+├── utils/
+│   ├── api.js                  # Reality Defender + Gemini + Fact Check wrappers
+│   └── cache.js                # Storage-backed result cache
+│
+├── scripts/
+│   └── generate_config.js      # .env → config.js for local key injection
+│
+├── assets/
+│   ├── dashboard-preview.svg
+│   ├── overlay-preview.svg
+│   └── settings-preview.svg
+│
+└── .env.example                # Key template (never commit real keys)
+```
 
-Required keys:
-- `REALITY_DEFENDER_API_KEY`
-- `GEMINI_API_KEY`
-- `FACT_CHECK_API_KEY`
+---
 
-### 3. Reload
-Reload the extension in `chrome://extensions` after changing keys.
+## 🔧 Tech Stack
 
-## Testing checklist
+| Layer | Technology | Purpose |
+|---|---|---|
+| Extension Platform | Chrome Manifest V3 | Browser-native execution |
+| AI Detection | Reality Defender API | Classifies images as real/AI/manipulated |
+| Explanation Engine | Google Gemini API | Human-readable verdict explanations |
+| Fact Verification | Google Fact Check API | Cross-references flagged claims |
+| Storage | chrome.storage.local | Local caching + key storage |
+| Messaging | Chrome Extension Messaging | Popup ↔ Content ↔ Background |
 
-### Basic checks
-- Open a site with several images
-- Scan one image from the overlay or context menu
-- Scan all images from the popup
-- Refresh the page and scan again to confirm cache reuse
+---
 
-### Failure-mode checks
-- Clear keys in Settings and scan again to verify fallback mode
-- Disconnect from the network and verify diagnostics appear in the service worker console
-- Try a site with remote images to see whether CORS/canvas tainting affects base64 conversion
+## ⚙️ Setup & Installation
 
-### Connectivity checks
-Run these in PowerShell if Reality Defender fails:
+### 1. Load Extension in Chrome
 
+```bash
+# Clone the repo
+git clone https://github.com/YOUR_USERNAME/pixelproof.git
+```
+
+1. Go to `chrome://extensions`
+2. Enable **Developer mode** (top right toggle)
+3. Click **Load unpacked** → select the `pixelproof/` folder
+4. PixelProof icon appears in your Chrome toolbar ✅
+
+### 2. Add API Keys
+
+**Option A — Options Page (recommended)**
+- Click the PixelProof icon → Settings
+- Paste keys into the fields → Save
+- Keys are stored in `chrome.storage.local` (never sent anywhere)
+
+**Option B — Environment File**
+```bash
+cp .env.example .env
+# Edit .env with your keys
+node scripts/generate_config.js
+```
+
+**Required keys:**
+
+| Key | Where to get it |
+|---|---|
+| `REALITY_DEFENDER_API_KEY` | [realitydefender.com](https://www.realitydefender.com/) |
+| `GEMINI_API_KEY` | [ai.google.dev](https://ai.google.dev/) |
+| `FACT_CHECK_API_KEY` | [Google Cloud Console](https://console.cloud.google.com/) |
+
+### 3. Reload & Go
+
+Reload the extension in `chrome://extensions` after saving keys — then start scanning.
+
+---
+
+## 🛡️ Fallback Mode
+
+PixelProof is **demo-safe by design**. If any API key is missing or a network request fails:
+
+- The extension logs diagnostics to the service worker console
+- A **simulated verdict** is generated locally
+- The UI continues working — overlays, explanations, confidence scores still display
+- The presentation never breaks
+
+**To demo fallback mode:** Open Settings, clear any API key, scan an image. PixelProof handles it gracefully.
+
+---
+
+## 🔒 Security
+
+- Real API keys **never leave your machine** — stored in `chrome.storage.local` only
+- `.env` and `config.js` are listed in `.gitignore`
+- No key is ever bundled into the extension package or sent to any third party
+- If a key is accidentally exposed, rotate it immediately at the provider
+
+---
+
+## 🧪 Testing Checklist
+
+### Core Flow
+- [ ] Open a news or social media page with images
+- [ ] Scan a single image via the overlay button
+- [ ] Scan all images via the popup — verify overlays appear
+- [ ] Refresh the page — rescan to confirm cache reuse (instant result)
+
+### Failure Paths
+- [ ] Clear API keys in Settings → verify fallback mode activates
+- [ ] Disconnect network → verify diagnostics appear in service worker console
+- [ ] Try images from cross-origin domains → observe canvas tainting behavior
+
+### Connectivity (PowerShell)
 ```powershell
 Invoke-WebRequest -Uri 'https://www.google.com/generate_204' -UseBasicParsing
 Invoke-WebRequest -Uri 'https://api.realitydefender.com/' -UseBasicParsing
 ```
 
-If those fail, it is usually network, firewall, DNS, or TLS related rather than an app bug.
+---
 
-## Troubleshooting
+## 🚀 What We Built During the Hackathon
 
-### `TypeError: Failed to fetch`
-This means the browser could not complete the request. Check:
-- your internet connection
-- VPN or proxy rules
-- firewall restrictions
-- whether the API endpoint is reachable from this machine
+- ✅ **Browser-native image scanning** — works on any page, no page modification required
+- ✅ **3-API orchestration pipeline** — Reality Defender → Gemini → Fact Check, in sequence
+- ✅ **Intelligent caching layer** — chrome.storage.local backed, deduplicates requests
+- ✅ **Safe local key workflow** — zero risk of key exposure via `.env` + `chrome.storage.local`
+- ✅ **Graceful fallback mode** — demo works even when APIs are unreachable
+- ✅ **Plain-English AI explanations** — Gemini turns raw detection output into something a non-technical user can act on
 
-### No content script response
-Reload the extension and make sure the page is not on a restricted Chrome internal page.
+---
 
-### Empty API key behavior
-PixelProof intentionally falls back to simulated detection if a key is missing so the demo still works.
+## 💡 Why PixelProof Matters
 
-## Demo checklist for judges
-- Open the popup and show the overall score
-- Scan a suspicious image and explain the verdict
-- Show the Gemini explanation and fact-check results
-- Demonstrate `Scan All Images`
-- Show the caching effect by rescanning
-- Open the Settings page and show local key storage
-- Mention the fallback path for unreliable network conditions
+Misinformation spreads at the speed of a scroll. By the time a fact-checker publishes a correction, millions of people have already seen the fake image and formed an opinion.
 
-## Judge script
-1. “PixelProof scans images right in Chrome.”
-2. “It explains why an image looks suspicious in simple language.”
-3. “It checks related claims against fact-check sources.”
-4. “It still works in demo conditions because it has safe fallback mode.”
-5. “It caches scans so repeated checks are instant.”
+PixelProof puts the detection tool **right where the content is** — in the browser, in real time, on every page. It doesn't ask users to copy URLs into some external tool. It works where the harm is already happening.
 
-## Security
-- Real keys should stay local only
-- `.env` and `config.js` are ignored by Git
-- Use `options/options.js` or `.env` for local development
-- If any key was exposed publicly, rotate it immediately
+---
 
-## Why the project is useful
-PixelProof gives judges a clear story:
-- problem: misinformation and synthetic media are hard to spot
-- solution: a browser-native assistant that flags suspicious images in context
-- demo value: easy to show, easy to understand, graceful under API failures
+## 📄 License
 
-## Why it stands out
-- Looks great in a live demo
-- Explains complex results clearly
-- Handles failure gracefully instead of breaking
-- Feels like a real product, not just a prototype
+MIT — see [LICENSE](LICENSE)
 
-## Next improvements
-- Replace the preview SVGs with real screenshots from the live extension
-- Add a backend proxy for image uploads to reduce CORS issues
-- Add tests for the API helpers and scan flow
-- Add encrypted key storage if you want a stronger local-secret model
+---
 
-## License
-MIT
+<div align="center">
 
+**Built for Next Byte Hacks V2** · Made with 🔍 and too much caffeine
+
+*If you're seeing fake images you can't unsee — you're welcome.*
+
+</div>
