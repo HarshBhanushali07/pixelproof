@@ -296,6 +296,12 @@ Reload the extension in `chrome://extensions` after saving keys — then start s
 - For the cleanest recording, keep the demo on a local page with controlled images.
 - Use the popup last if you want to show bulk scanning after the individual badge flow.
 
+## Repository Docs
+
+- [Contributing](CONTRIBUTING.md) - how to open clean pull requests and keep changes focused
+- [Security](SECURITY.md) - how to report issues safely and handle secrets
+- [License](LICENSE) - MIT license for reuse and redistribution
+
 ---
 
 ## 🛡️ Fallback Mode

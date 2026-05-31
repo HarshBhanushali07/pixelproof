@@ -4,13 +4,12 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>PixelProof — See Through the Lie</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
 :root{
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, SF Mono, Consolas, Liberation Mono, Menlo, monospace;
   --bg:#08090a;
   --bg2:#0f1012;
   --bg3:#161719;
@@ -31,7 +30,7 @@
 
 html{scroll-behavior:smooth}
 body{
-  font-family:'DM Sans',sans-serif;
+  font-family:var(--font-sans);
   background:var(--bg);
   color:var(--text);
   min-height:100vh;
@@ -86,8 +85,8 @@ nav{
   display:flex;align-items:center;justify-content:space-between;
 }
 .logo{
-  font-family:'Syne',sans-serif;
-  font-weight:800;font-size:1.3rem;
+  font-family:var(--font-sans);
+  font-weight:700;font-size:1.15rem;
   display:flex;align-items:center;gap:0.5rem;
   letter-spacing:-0.02em;
 }
@@ -100,7 +99,7 @@ nav{
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.6;transform:scale(0.85)}}
 
 .nav-badge{
-  font-family:'DM Mono',monospace;
+  font-family:var(--font-mono);
   font-size:0.7rem;padding:0.3rem 0.75rem;
   border:1px solid var(--border2);
   border-radius:100px;color:var(--text2);
@@ -112,7 +111,7 @@ nav{
   text-align:center;
 }
 .hero-eyebrow{
-  font-family:'DM Mono',monospace;
+  font-family:var(--font-mono);
   font-size:0.72rem;letter-spacing:0.15em;
   color:var(--red);text-transform:uppercase;
   margin-bottom:1.5rem;
@@ -123,7 +122,7 @@ nav{
   width:24px;height:1px;background:var(--red);opacity:0.5;
 }
 h1{
-  font-family:'Syne',sans-serif;
+  font-family:var(--font-sans);
   font-weight:800;
   font-size:clamp(2.8rem,7vw,5.5rem);
   line-height:1.0;
@@ -146,7 +145,7 @@ h1{
   margin-bottom:3rem;
 }
 .badge{
-  font-family:'DM Mono',monospace;
+  font-family:var(--font-mono);
   font-size:0.68rem;letter-spacing:0.04em;
   padding:0.35rem 0.8rem;border-radius:100px;
   border:1px solid;
@@ -160,7 +159,7 @@ h1{
 
 .btn-primary{
   display:inline-flex;align-items:center;gap:0.6rem;
-  font-family:'DM Mono',monospace;
+  font-family:var(--font-sans);
   font-size:0.85rem;letter-spacing:0.04em;
   padding:0.85rem 2rem;
   background:var(--red);color:#fff;
@@ -172,7 +171,7 @@ h1{
 .btn-primary:hover{background:#ff2222;transform:translateY(-1px);box-shadow:0 8px 24px rgba(255,68,68,0.3);}
 .btn-secondary{
   display:inline-flex;align-items:center;gap:0.6rem;
-  font-family:'DM Mono',monospace;
+  font-family:var(--font-sans);
   font-size:0.85rem;letter-spacing:0.04em;
   padding:0.85rem 2rem;
   background:transparent;color:var(--text2);
@@ -184,13 +183,13 @@ h1{
 .btn-secondary:hover{border-color:var(--border2);color:var(--text);background:var(--bg3);}
 
 .section-label{
-  font-family:'DM Mono',monospace;
+  font-family:var(--font-mono);
   font-size:0.68rem;letter-spacing:0.15em;
   color:var(--text3);text-transform:uppercase;
   margin-bottom:1rem;
 }
 .section-title{
-  font-family:'Syne',sans-serif;
+  font-family:var(--font-sans);
   font-weight:800;font-size:clamp(1.6rem,4vw,2.4rem);
   letter-spacing:-0.02em;margin-bottom:1rem;
 }
@@ -206,7 +205,7 @@ h1{
   padding:2rem 1.5rem;text-align:center;
 }
 .stat-num{
-  font-family:'Syne',sans-serif;font-weight:800;
+  font-family:var(--font-sans);font-weight:800;
   font-size:2.2rem;letter-spacing:-0.03em;
   line-height:1;margin-bottom:0.4rem;
 }
@@ -236,7 +235,7 @@ h1{
 .browser-url{
   flex:1;background:var(--bg);border:1px solid var(--border);
   border-radius:4px;padding:0.35rem 0.75rem;
-  font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--text2);
+  font-family:var(--font-sans);font-size:0.72rem;color:var(--text2);
 }
 
 .demo-area{
@@ -250,7 +249,7 @@ h1{
   position:relative;overflow:hidden;
 }
 .demo-page-header{
-  font-family:'DM Mono',monospace;font-size:0.7rem;
+  font-family:var(--font-mono);font-size:0.7rem;
   color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;
   margin-bottom:1.5rem;padding-bottom:1rem;
   border-bottom:1px solid var(--border);
@@ -287,7 +286,7 @@ h1{
 @keyframes scanline{0%{top:0%}100%{top:100%}}
 
 .verdict-badge{
-  font-family:'DM Mono',monospace;
+  font-family:var(--font-mono);
   font-size:0.7rem;letter-spacing:0.06em;
   padding:0.3rem 0.7rem;border-radius:4px;
   font-weight:500;z-index:2;
@@ -297,7 +296,7 @@ h1{
 .verdict-suspect{background:rgba(245,158,11,0.9);color:#fff;}
 
 .confidence-mini{
-  font-family:'DM Mono',monospace;font-size:0.65rem;
+  font-family:var(--font-mono);font-size:0.65rem;
   background:rgba(0,0,0,0.8);color:var(--text2);
   padding:0.2rem 0.5rem;border-radius:3px;z-index:2;
 }
@@ -323,12 +322,12 @@ h1{
   display:flex;align-items:center;justify-content:space-between;
 }
 .ext-logo{
-  font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;
+  font-family:var(--font-sans);font-weight:700;font-size:1rem;
   display:flex;align-items:center;gap:0.4rem;
 }
 .ext-logo-dot{width:8px;height:8px;border-radius:50%;background:var(--red);}
 .ext-status-pill{
-  font-family:'DM Mono',monospace;font-size:0.65rem;
+  font-family:var(--font-mono);font-size:0.65rem;
   padding:0.25rem 0.6rem;border-radius:100px;
   background:rgba(34,197,94,0.12);color:var(--green);
   border:1px solid rgba(34,197,94,0.3);
@@ -341,7 +340,7 @@ h1{
   width:100%;padding:0.85rem;
   background:var(--red);color:#fff;
   border:none;border-radius:6px;
-  font-family:'DM Mono',monospace;
+  font-family:var(--font-sans);
   font-size:0.8rem;letter-spacing:0.06em;text-transform:uppercase;
   cursor:pointer;transition:all 0.2s;
   display:flex;align-items:center;justify-content:center;gap:0.5rem;
@@ -362,7 +361,7 @@ h1{
   transition:width 0.4s ease;
 }
 .progress-label{
-  font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--text3);
+  font-family:var(--font-mono);font-size:0.68rem;color:var(--text3);
   display:flex;justify-content:space-between;
 }
 
@@ -399,7 +398,7 @@ h1{
 }
 .detail-card.active{display:block;}
 .detail-label{
-  font-family:'DM Mono',monospace;font-size:0.65rem;
+  font-family:var(--font-mono);font-size:0.65rem;
   color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;
   margin-bottom:0.5rem;
 }
@@ -420,7 +419,7 @@ h1{
 .score-ring svg{width:52px;height:52px;transform:rotate(-90deg);}
 .score-ring-num{
   position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  font-family:'DM Mono',monospace;font-size:0.8rem;font-weight:500;
+  font-family:var(--font-mono);font-size:0.8rem;font-weight:500;
 }
 .score-info{flex:1;}
 .score-title{font-size:0.82rem;font-weight:500;margin-bottom:0.2rem;}
@@ -442,13 +441,13 @@ h1{
   display:flex;align-items:center;justify-content:center;
   font-size:1.3rem;margin-bottom:1rem;
 }
-.arch-card-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;margin-bottom:0.5rem;}
+.arch-card-title{font-family:var(--font-sans);font-weight:800;font-size:1rem;margin-bottom:0.5rem;}
 .arch-card-text{font-size:0.85rem;color:var(--text2);line-height:1.6;}
 .arch-card-tech{
   margin-top:1rem;display:flex;flex-wrap:wrap;gap:0.4rem;
 }
 .tech-pill{
-  font-family:'DM Mono',monospace;font-size:0.65rem;
+  font-family:var(--font-mono);font-size:0.65rem;
   padding:0.2rem 0.55rem;border-radius:3px;
   background:var(--bg3);border:1px solid var(--border2);
   color:var(--text3);
@@ -471,11 +470,11 @@ h1{
 .pipeline-step:last-child{border-right:none;}
 .pipeline-step:hover{background:var(--bg3);}
 .step-num{
-  font-family:'DM Mono',monospace;font-size:0.65rem;
+  font-family:var(--font-mono);font-size:0.65rem;
   color:var(--text3);letter-spacing:0.1em;margin-bottom:0.75rem;
 }
 .step-icon{font-size:1.5rem;margin-bottom:0.75rem;}
-.step-name{font-family:'Syne',sans-serif;font-weight:800;font-size:0.95rem;margin-bottom:0.5rem;}
+.step-name{font-family:var(--font-sans);font-weight:800;font-size:0.95rem;margin-bottom:0.5rem;}
 .step-desc{font-size:0.78rem;color:var(--text2);line-height:1.5;}
 .step-arrow{
   position:absolute;right:-1px;top:50%;transform:translateY(-50%);
@@ -498,7 +497,7 @@ h1{
 }
 .feature-cell:hover{background:var(--bg3);}
 .feature-cell-icon{font-size:1.6rem;margin-bottom:1rem;}
-.feature-cell-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;margin-bottom:0.5rem;}
+.feature-cell-title{font-family:var(--font-sans);font-weight:800;font-size:1rem;margin-bottom:0.5rem;}
 .feature-cell-text{font-size:0.82rem;color:var(--text2);line-height:1.6;}
 
 footer{
@@ -507,7 +506,7 @@ footer{
   text-align:center;
 }
 .footer-logo{
-  font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;
+  font-family:var(--font-sans);font-weight:700;font-size:1.1rem;
   display:inline-flex;align-items:center;gap:0.5rem;
   margin-bottom:1rem;
 }
@@ -516,7 +515,7 @@ footer{
   display:flex;justify-content:center;gap:2rem;margin-top:1.5rem;
 }
 .footer-link{
-  font-family:'DM Mono',monospace;font-size:0.72rem;
+  font-family:var(--font-mono);font-size:0.72rem;
   color:var(--text3);text-decoration:none;letter-spacing:0.04em;
   transition:color 0.2s;
 }
