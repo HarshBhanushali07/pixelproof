@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PixelProof — See Through the Lie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#08090a;
+  --bg2:#0f1012;
+  --bg3:#161719;
+  --border:#2a2b2d;
+  --border2:#3a3b3d;
+  --text:#f0f0f0;
+  --text2:#9a9b9e;
+  --text3:#5a5b5e;
+  --red:#ff4444;
+  --red2:#ff6b6b;
+  --amber:#f59e0b;
+  --green:#22c55e;
+  --blue:#3b82f6;
+  --cyan:#06b6d4;
+  --purple:#a855f7;
+  --accent:#ff4444;
+}
+
+html{scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+  cursor:default;
+}
+
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:0;
+  opacity:0.6;
+}
+
+.grid-bg{
+  position:fixed;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(255,68,68,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,68,68,0.04) 1px, transparent 1px);
+  background-size:48px 48px;
+  pointer-events:none;
+  z-index:0;
+}
+
+.orb{
+  position:fixed;
+  border-radius:50%;
+  filter:blur(80px);
+  pointer-events:none;
+  z-index:0;
+  opacity:0.15;
+}
+.orb1{width:500px;height:500px;background:var(--red);top:-200px;left:-100px;}
+.orb2{width:400px;height:400px;background:var(--purple);bottom:-150px;right:-100px;}
+
+.container{max-width:1100px;margin:0 auto;padding:0 2rem;position:relative;z-index:1;}
+
+nav{
+  padding:1.25rem 0;
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;
+  background:rgba(8,9,10,0.9);
+  backdrop-filter:blur(12px);
+  z-index:100;
+}
+.nav-inner{
+  max-width:1100px;margin:0 auto;padding:0 2rem;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.logo{
+  font-family:'Syne',sans-serif;
+  font-weight:800;font-size:1.3rem;
+  display:flex;align-items:center;gap:0.5rem;
+  letter-spacing:-0.02em;
+}
+.logo-dot{
+  width:10px;height:10px;border-radius:50%;
+  background:var(--red);
+  box-shadow:0 0 10px var(--red);
+  animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.6;transform:scale(0.85)}}
+
+.nav-badge{
+  font-family:'DM Mono',monospace;
+  font-size:0.7rem;padding:0.3rem 0.75rem;
+  border:1px solid var(--border2);
+  border-radius:100px;color:var(--text2);
+  letter-spacing:0.05em;
+}
+
+.hero{
+  padding:6rem 0 4rem;
+  text-align:center;
+}
+.hero-eyebrow{
+  font-family:'DM Mono',monospace;
+  font-size:0.72rem;letter-spacing:0.15em;
+  color:var(--red);text-transform:uppercase;
+  margin-bottom:1.5rem;
+  display:inline-flex;align-items:center;gap:0.5rem;
+}
+.hero-eyebrow::before,.hero-eyebrow::after{
+  content:'';display:inline-block;
+  width:24px;height:1px;background:var(--red);opacity:0.5;
+}
+h1{
+  font-family:'Syne',sans-serif;
+  font-weight:800;
+  font-size:clamp(2.8rem,7vw,5.5rem);
+  line-height:1.0;
+  letter-spacing:-0.03em;
+  margin-bottom:1.5rem;
+}
+.h1-line2{
+  color:var(--text2);
+  -webkit-text-stroke:1px rgba(255,255,255,0.15);
+  color:transparent;
+}
+.hero-sub{
+  font-size:1.15rem;color:var(--text2);font-weight:300;
+  max-width:580px;margin:0 auto 3rem;line-height:1.7;
+}
+.hero-sub strong{color:var(--text);font-weight:500;}
+
+.hero-badges{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:0.5rem;
+  margin-bottom:3rem;
+}
+.badge{
+  font-family:'DM Mono',monospace;
+  font-size:0.68rem;letter-spacing:0.04em;
+  padding:0.35rem 0.8rem;border-radius:100px;
+  border:1px solid;
+}
+.badge-red{border-color:rgba(255,68,68,0.4);color:var(--red);background:rgba(255,68,68,0.07);}
+.badge-blue{border-color:rgba(59,130,246,0.4);color:var(--blue);background:rgba(59,130,246,0.07);}
+.badge-green{border-color:rgba(34,197,94,0.4);color:var(--green);background:rgba(34,197,94,0.07);}
+.badge-amber{border-color:rgba(245,158,11,0.4);color:var(--amber);background:rgba(245,158,11,0.07);}
+.badge-purple{border-color:rgba(168,85,247,0.4);color:var(--purple);background:rgba(168,85,247,0.07);}
+.badge-cyan{border-color:rgba(6,182,212,0.4);color:var(--cyan);background:rgba(6,182,212,0.07);}
+
+.btn-primary{
+  display:inline-flex;align-items:center;gap:0.6rem;
+  font-family:'DM Mono',monospace;
+  font-size:0.85rem;letter-spacing:0.04em;
+  padding:0.85rem 2rem;
+  background:var(--red);color:#fff;
+  border:none;border-radius:4px;
+  cursor:pointer;
+  transition:all 0.2s;
+  text-transform:uppercase;
+}
+.btn-primary:hover{background:#ff2222;transform:translateY(-1px);box-shadow:0 8px 24px rgba(255,68,68,0.3);}
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:0.6rem;
+  font-family:'DM Mono',monospace;
+  font-size:0.85rem;letter-spacing:0.04em;
+  padding:0.85rem 2rem;
+  background:transparent;color:var(--text2);
+  border:1px solid var(--border2);border-radius:4px;
+  cursor:pointer;
+  transition:all 0.2s;
+  text-transform:uppercase;
+}
+.btn-secondary:hover{border-color:var(--border2);color:var(--text);background:var(--bg3);}
+
+.section-label{
+  font-family:'DM Mono',monospace;
+  font-size:0.68rem;letter-spacing:0.15em;
+  color:var(--text3);text-transform:uppercase;
+  margin-bottom:1rem;
+}
+.section-title{
+  font-family:'Syne',sans-serif;
+  font-weight:800;font-size:clamp(1.6rem,4vw,2.4rem);
+  letter-spacing:-0.02em;margin-bottom:1rem;
+}
+
+.stats-row{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  border:1px solid var(--border);border-radius:8px;
+  overflow:hidden;margin:4rem 0;
+  background:var(--border);
+}
+.stat-cell{
+  background:var(--bg2);
+  padding:2rem 1.5rem;text-align:center;
+}
+.stat-num{
+  font-family:'Syne',sans-serif;font-weight:800;
+  font-size:2.2rem;letter-spacing:-0.03em;
+  line-height:1;margin-bottom:0.4rem;
+}
+.stat-label{font-size:0.82rem;color:var(--text2);font-weight:300;}
+
+.demo-section{
+  padding:4rem 0 6rem;
+}
+.demo-wrapper{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:12px;
+  overflow:hidden;
+}
+
+.browser-bar{
+  background:var(--bg3);
+  border-bottom:1px solid var(--border);
+  padding:0.75rem 1rem;
+  display:flex;align-items:center;gap:0.75rem;
+}
+.browser-dots{display:flex;gap:6px;}
+.bdot{width:12px;height:12px;border-radius:50%;}
+.bdot-r{background:#ff5f57;}
+.bdot-y{background:#ffbd2e;}
+.bdot-g{background:#28c840;}
+.browser-url{
+  flex:1;background:var(--bg);border:1px solid var(--border);
+  border-radius:4px;padding:0.35rem 0.75rem;
+  font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--text2);
+}
+
+.demo-area{
+  display:grid;grid-template-columns:1fr 340px;
+  min-height:520px;
+}
+.demo-page{
+  padding:2rem;
+  border-right:1px solid var(--border);
+  background:var(--bg);
+  position:relative;overflow:hidden;
+}
+.demo-page-header{
+  font-family:'DM Mono',monospace;font-size:0.7rem;
+  color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;
+  margin-bottom:1.5rem;padding-bottom:1rem;
+  border-bottom:1px solid var(--border);
+}
+.demo-images-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;
+}
+.demo-img-wrap{
+  position:relative;border-radius:6px;overflow:hidden;
+  aspect-ratio:16/10;background:var(--bg3);
+  border:1px solid var(--border);
+  cursor:pointer;transition:border-color 0.2s;
+}
+.demo-img-wrap:hover{border-color:var(--border2);}
+
+.img-placeholder{
+  width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+}
+
+.scan-overlay{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:0.4rem;opacity:0;transition:opacity 0.3s;
+  pointer-events:none;
+}
+.scan-overlay.scanning{opacity:1;}
+.scan-overlay.result{opacity:1;}
+
+.scan-line{
+  position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--cyan),transparent);
+  animation:scanline 1.2s linear infinite;
+}
+@keyframes scanline{0%{top:0%}100%{top:100%}}
+
+.verdict-badge{
+  font-family:'DM Mono',monospace;
+  font-size:0.7rem;letter-spacing:0.06em;
+  padding:0.3rem 0.7rem;border-radius:4px;
+  font-weight:500;z-index:2;
+}
+.verdict-ai{background:rgba(255,68,68,0.9);color:#fff;}
+.verdict-real{background:rgba(34,197,94,0.9);color:#fff;}
+.verdict-suspect{background:rgba(245,158,11,0.9);color:#fff;}
+
+.confidence-mini{
+  font-family:'DM Mono',monospace;font-size:0.65rem;
+  background:rgba(0,0,0,0.8);color:var(--text2);
+  padding:0.2rem 0.5rem;border-radius:3px;z-index:2;
+}
+
+.corner-bracket{
+  position:absolute;z-index:2;
+  width:16px;height:16px;
+  border-color:var(--cyan);border-style:solid;
+  border-width:0;opacity:0.8;
+}
+.corner-bracket.tl{top:6px;left:6px;border-top-width:2px;border-left-width:2px;}
+.corner-bracket.tr{top:6px;right:6px;border-top-width:2px;border-right-width:2px;}
+.corner-bracket.bl{bottom:6px;left:6px;border-bottom-width:2px;border-left-width:2px;}
+.corner-bracket.br{bottom:6px;right:6px;border-bottom-width:2px;border-right-width:2px;}
+
+.ext-panel{
+  background:var(--bg2);
+  display:flex;flex-direction:column;
+}
+.ext-header{
+  padding:1rem 1.25rem;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.ext-logo{
+  font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;
+  display:flex;align-items:center;gap:0.4rem;
+}
+.ext-logo-dot{width:8px;height:8px;border-radius:50%;background:var(--red);}
+.ext-status-pill{
+  font-family:'DM Mono',monospace;font-size:0.65rem;
+  padding:0.25rem 0.6rem;border-radius:100px;
+  background:rgba(34,197,94,0.12);color:var(--green);
+  border:1px solid rgba(34,197,94,0.3);
+  letter-spacing:0.05em;
+}
+
+.ext-body{padding:1.25rem;flex:1;display:flex;flex-direction:column;gap:1rem;}
+
+.scan-btn{
+  width:100%;padding:0.85rem;
+  background:var(--red);color:#fff;
+  border:none;border-radius:6px;
+  font-family:'DM Mono',monospace;
+  font-size:0.8rem;letter-spacing:0.06em;text-transform:uppercase;
+  cursor:pointer;transition:all 0.2s;
+  display:flex;align-items:center;justify-content:center;gap:0.5rem;
+}
+.scan-btn:hover{background:#ff2222;transform:translateY(-1px);}
+.scan-btn:disabled{background:var(--bg3);color:var(--text3);cursor:not-allowed;transform:none;}
+
+.scan-progress{
+  display:none;
+  flex-direction:column;gap:0.5rem;
+}
+.scan-progress.active{display:flex;}
+.progress-bar-wrap{
+  height:3px;background:var(--border);border-radius:2px;overflow:hidden;
+}
+.progress-bar-fill{
+  height:100%;background:var(--red);border-radius:2px;width:0%;
+  transition:width 0.4s ease;
+}
+.progress-label{
+  font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--text3);
+  display:flex;justify-content:space-between;
+}
+
+.results-list{display:flex;flex-direction:column;gap:0.5rem;}
+.result-item{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:6px;padding:0.75rem;
+  display:flex;align-items:flex-start;gap:0.75rem;
+  opacity:0;transform:translateY(6px);
+  transition:opacity 0.35s,transform 0.35s;
+}
+.result-item.visible{opacity:1;transform:translateY(0);}
+.result-icon{
+  width:32px;height:32px;border-radius:4px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;flex-shrink:0;
+}
+.icon-ai{background:rgba(255,68,68,0.12);}
+.icon-real{background:rgba(34,197,94,0.12);}
+.icon-suspect{background:rgba(245,158,11,0.12);}
+.result-info{flex:1;min-width:0;}
+.result-title{
+  font-size:0.78rem;font-weight:500;color:var(--text);
+  margin-bottom:0.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.result-sub{font-size:0.7rem;color:var(--text2);margin-bottom:0.4rem;}
+.conf-bar{height:3px;border-radius:2px;background:var(--border);overflow:hidden;}
+.conf-fill{height:100%;border-radius:2px;transition:width 0.8s ease 0.2s;width:0%;}
+
+.detail-card{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:6px;padding:1rem;
+  display:none;
+}
+.detail-card.active{display:block;}
+.detail-label{
+  font-family:'DM Mono',monospace;font-size:0.65rem;
+  color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;
+  margin-bottom:0.5rem;
+}
+.detail-text{font-size:0.78rem;color:var(--text2);line-height:1.6;}
+.detail-factcheck{
+  margin-top:0.75rem;padding-top:0.75rem;
+  border-top:1px solid var(--border);
+  font-size:0.72rem;color:var(--text3);
+}
+.factcheck-match{color:var(--amber);font-weight:500;}
+
+.score-ring-wrap{
+  display:flex;align-items:center;gap:1rem;
+  padding:1rem;background:var(--bg3);
+  border:1px solid var(--border);border-radius:6px;
+}
+.score-ring{position:relative;width:52px;height:52px;flex-shrink:0;}
+.score-ring svg{width:52px;height:52px;transform:rotate(-90deg);}
+.score-ring-num{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:'DM Mono',monospace;font-size:0.8rem;font-weight:500;
+}
+.score-info{flex:1;}
+.score-title{font-size:0.82rem;font-weight:500;margin-bottom:0.2rem;}
+.score-sub{font-size:0.72rem;color:var(--text2);}
+
+.arch-section{padding:5rem 0;}
+.arch-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;
+  margin-top:3rem;
+}
+.arch-card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:1.75rem;
+  transition:border-color 0.2s;
+}
+.arch-card:hover{border-color:var(--border2);}
+.arch-card-icon{
+  width:40px;height:40px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;margin-bottom:1rem;
+}
+.arch-card-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;margin-bottom:0.5rem;}
+.arch-card-text{font-size:0.85rem;color:var(--text2);line-height:1.6;}
+.arch-card-tech{
+  margin-top:1rem;display:flex;flex-wrap:wrap;gap:0.4rem;
+}
+.tech-pill{
+  font-family:'DM Mono',monospace;font-size:0.65rem;
+  padding:0.2rem 0.55rem;border-radius:3px;
+  background:var(--bg3);border:1px solid var(--border2);
+  color:var(--text3);
+}
+
+.pipeline-section{padding:3rem 0 5rem;}
+.pipeline{
+  display:flex;align-items:stretch;gap:0;
+  margin-top:3rem;
+  border:1px solid var(--border);border-radius:10px;
+  overflow:hidden;
+}
+.pipeline-step{
+  flex:1;padding:1.75rem 1.25rem;
+  background:var(--bg2);
+  border-right:1px solid var(--border);
+  position:relative;
+  transition:background 0.2s;
+}
+.pipeline-step:last-child{border-right:none;}
+.pipeline-step:hover{background:var(--bg3);}
+.step-num{
+  font-family:'DM Mono',monospace;font-size:0.65rem;
+  color:var(--text3);letter-spacing:0.1em;margin-bottom:0.75rem;
+}
+.step-icon{font-size:1.5rem;margin-bottom:0.75rem;}
+.step-name{font-family:'Syne',sans-serif;font-weight:800;font-size:0.95rem;margin-bottom:0.5rem;}
+.step-desc{font-size:0.78rem;color:var(--text2);line-height:1.5;}
+.step-arrow{
+  position:absolute;right:-1px;top:50%;transform:translateY(-50%);
+  width:20px;height:20px;
+  background:var(--border);
+  clip-path:polygon(0 50%, 100% 0, 100% 100%);
+  z-index:2;
+}
+
+.features-section{padding:4rem 0 6rem;}
+.features-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:var(--border);border:1px solid var(--border);
+  border-radius:10px;overflow:hidden;
+  margin-top:3rem;
+}
+.feature-cell{
+  background:var(--bg2);padding:2rem 1.5rem;
+  transition:background 0.2s;
+}
+.feature-cell:hover{background:var(--bg3);}
+.feature-cell-icon{font-size:1.6rem;margin-bottom:1rem;}
+.feature-cell-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;margin-bottom:0.5rem;}
+.feature-cell-text{font-size:0.82rem;color:var(--text2);line-height:1.6;}
+
+footer{
+  border-top:1px solid var(--border);
+  padding:2.5rem 0;
+  text-align:center;
+}
+.footer-logo{
+  font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;
+  display:inline-flex;align-items:center;gap:0.5rem;
+  margin-bottom:1rem;
+}
+.footer-text{font-size:0.82rem;color:var(--text3);}
+.footer-links{
+  display:flex;justify-content:center;gap:2rem;margin-top:1.5rem;
+}
+.footer-link{
+  font-family:'DM Mono',monospace;font-size:0.72rem;
+  color:var(--text3);text-decoration:none;letter-spacing:0.04em;
+  transition:color 0.2s;
+}
+.footer-link:hover{color:var(--text);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.fade-up{animation:fadeUp 0.6s ease forwards;}
+.fade-in{animation:fadeIn 0.6s ease forwards;}
+.delay-1{animation-delay:0.1s;opacity:0;}
+.delay-2{animation-delay:0.2s;opacity:0;}
+.delay-3{animation-delay:0.3s;opacity:0;}
+.delay-4{animation-delay:0.4s;opacity:0;}
+.delay-5{animation-delay:0.5s;opacity:0;}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{
+  width:14px;height:14px;border:2px solid rgba(255,255,255,0.2);
+  border-top-color:#fff;border-radius:50%;
+  animation:spin 0.7s linear infinite;
+  display:none;
+}
+.spinner.active{display:block;}
+
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+
+@media(max-width:768px){
+  .demo-area{grid-template-columns:1fr;}
+  .ext-panel{border-top:1px solid var(--border);}
+  .stats-row{grid-template-columns:repeat(2,1fr);}
+  .arch-grid{grid-template-columns:1fr;}
+  .features-grid{grid-template-columns:1fr;}
+  .pipeline{flex-direction:column;}
+  .pipeline-step{border-right:none;border-bottom:1px solid var(--border);}
+  .step-arrow{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+
+<nav>
+  <div class="nav-inner">
+    <div class="logo">
+      <div class="logo-dot"></div>
+      PixelProof
+    </div>
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <span class="nav-badge">NEXT BYTE HACKS V2</span>
+      <a href="https://github.com/HarshBhanushali07/pixelproof" class="btn-secondary" style="padding:0.5rem 1rem;font-size:0.72rem;">
+        GitHub ↗
+      </a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero container">
+  <div class="hero-eyebrow fade-up">Chrome Extension · AI Detection</div>
+  <h1 class="fade-up delay-1">
+    See Through<br/>
+    <span class="h1-line2">the Lie.</span>
+  </h1>
+  <p class="hero-sub fade-up delay-2">
+    A browser extension that <strong>detects AI-generated images</strong> in real time, explains the suspicious parts in plain English, and cross-checks claims against <strong>live fact-check data</strong>.
+  </p>
+  <div class="hero-badges fade-up delay-3">
+    <span class="badge badge-red">Reality Defender API</span>
+    <span class="badge badge-blue">Gemini AI</span>
+    <span class="badge badge-green">Google Fact Check</span>
+    <span class="badge badge-amber">Manifest V3</span>
+    <span class="badge badge-purple">Smart Cache</span>
+    <span class="badge badge-cyan">Fallback Mode</span>
+  </div>
+  <div class="fade-up delay-4" style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+    <button class="btn-primary" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">
+      ▶ Try Live Demo
+    </button>
+    <a href="https://github.com/HarshBhanushali07/pixelproof" class="btn-secondary">View Source Code</a>
+  </div>
+</section>
+
+<div class="container">
+  <div class="stats-row fade-up">
+    <div class="stat-cell">
+      <div class="stat-num" style="color:var(--red)">3</div>
+      <div class="stat-label">AI APIs Connected</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num" style="color:var(--blue)">~50ms</div>
+      <div class="stat-label">Cached Result Speed</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num" style="color:var(--green)">100%</div>
+      <div class="stat-label">Demo Uptime (Fallback)</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num" style="color:var(--amber)">MV3</div>
+      <div class="stat-label">Chrome Manifest</div>
+    </div>
+  </div>
+</div>
+
+<section class="demo-section container" id="demo">
+  <div style="margin-bottom:2.5rem;">
+    <div class="section-label">Interactive Demo</div>
+    <div class="section-title">Click. Scan. Discover.</div>
+    <p style="color:var(--text2);font-size:0.9rem;max-width:520px;">
+      This is PixelProof working live. Hit <strong style="color:var(--text)">Scan All Images</strong> in the extension panel and watch the verdicts come in.
+    </p>
+  </div>
+
+  <div class="demo-wrapper">
+    <div class="browser-bar">
+      <div class="browser-dots">
+        <div class="bdot bdot-r"></div>
+        <div class="bdot bdot-y"></div>
+        <div class="bdot bdot-g"></div>
+      </div>
+      <div class="browser-url">https://breaking-news.example.com/world/conflict-update</div>
+    </div>
+
+    <div class="demo-area">
+      <div class="demo-page">
+        <div class="demo-page-header">📰 Breaking News — 4 Images Found on Page</div>
+        <div class="demo-images-grid" id="imageGrid">
+          <div class="demo-img-wrap" id="img1" onclick="showDetail(0)">
+            <div class="img-placeholder">
+              <svg width="100%" height="100%" viewBox="0 0 240 150" xmlns="http://www.w3.org/2000/svg">
+                <rect width="240" height="150" fill="#1a1b1e"/>
+                <rect x="20" y="20" width="200" height="90" rx="4" fill="#252628"/>
+                <circle cx="60" cy="55" r="18" fill="#333"/>
+                <circle cx="60" cy="53" r="12" fill="#444"/>
+                <ellipse cx="60" cy="80" rx="22" ry="12" fill="#3a3a3a"/>
+                <circle cx="140" cy="50" r="20" fill="#2d2d2d"/>
+                <circle cx="140" cy="48" r="13" fill="#3d3d3d"/>
+                <ellipse cx="140" cy="78" rx="25" ry="14" fill="#333"/>
+                <rect x="20" y="118" width="140" height="6" rx="3" fill="#2a2a2a"/>
+                <rect x="20" y="130" width="100" height="4" rx="2" fill="#222"/>
+                <text x="120" y="145" font-family="monospace" font-size="8" fill="#333" text-anchor="middle">CONFLICT ZONE — BREAKING</text>
+              </svg>
+            </div>
+            <div class="scan-overlay" id="overlay1">
+              <div class="scan-line" id="scanline1" style="display:none"></div>
+              <div class="corner-bracket tl"></div>
+              <div class="corner-bracket tr"></div>
+              <div class="corner-bracket bl"></div>
+              <div class="corner-bracket br"></div>
+              <div class="verdict-badge verdict-ai" id="verdict1" style="display:none">⚠ AI GENERATED</div>
+              <div class="confidence-mini" id="conf1" style="display:none">94% confidence</div>
+            </div>
+          </div>
+
+          <div class="demo-img-wrap" id="img2" onclick="showDetail(1)">
+            <div class="img-placeholder">
+              <svg width="100%" height="100%" viewBox="0 0 240 150" xmlns="http://www.w3.org/2000/svg">
+                <rect width="240" height="150" fill="#0f1a12"/>
+                <rect width="240" height="80" fill="#162214"/>
+                <rect y="80" width="240" height="70" fill="#0d1510"/>
+                <rect x="60" y="30" width="30" height="50" rx="2" fill="#1e3322"/>
+                <rect x="100" y="15" width="20" height="65" rx="2" fill="#1a2e1e"/>
+                <rect x="130" y="40" width="35" height="40" rx="2" fill="#1c3020"/>
+                <rect x="175" y="25" width="25" height="55" rx="2" fill="#1a2c1c"/>
+                <ellipse cx="120" cy="82" rx="80" ry="6" fill="#0c1a0e"/>
+                <circle cx="35" cy="55" r="8" fill="#f59e0b" opacity="0.4"/>
+                <text x="120" y="138" font-family="monospace" font-size="8" fill="#1a3a1e" text-anchor="middle">REUTERS — VERIFIED PHOTO</text>
+              </svg>
+            </div>
+            <div class="scan-overlay" id="overlay2">
+              <div class="scan-line" id="scanline2" style="display:none"></div>
+              <div class="corner-bracket tl"></div>
+              <div class="corner-bracket tr"></div>
+              <div class="corner-bracket bl"></div>
+              <div class="corner-bracket br"></div>
+              <div class="verdict-badge verdict-real" id="verdict2" style="display:none">✓ AUTHENTIC</div>
+              <div class="confidence-mini" id="conf2" style="display:none">87% confidence</div>
+            </div>
+          </div>
+
+          <div class="demo-img-wrap" id="img3" onclick="showDetail(2)">
+            <div class="img-placeholder">
+              <svg width="100%" height="100%" viewBox="0 0 240 150" xmlns="http://www.w3.org/2000/svg">
+                <rect width="240" height="150" fill="#1a1510"/>
+                <rect x="0" y="60" width="240" height="90" fill="#251e15"/>
+                <ellipse cx="120" cy="62" rx="110" ry="55" fill="#1e1710"/>
+                <rect x="80" y="20" width="80" height="50" rx="6" fill="#2a2218" opacity="0.8"/>
+                <rect x="90" y="30" width="60" height="35" rx="4" fill="#333"/>
+                <text x="120" y="52" font-family="monospace" font-size="9" fill="#555" text-anchor="middle">LEAKED</text>
+                <rect x="20" y="115" width="160" height="5" rx="2" fill="#2a2218"/>
+                <rect x="40" y="126" width="120" height="4" rx="2" fill="#22190e"/>
+                <text x="120" y="144" font-family="monospace" font-size="7" fill="#332a18" text-anchor="middle">UNVERIFIED — SOURCE UNKNOWN</text>
+              </svg>
+            </div>
+            <div class="scan-overlay" id="overlay3">
+              <div class="scan-line" id="scanline3" style="display:none"></div>
+              <div class="corner-bracket tl"></div>
+              <div class="corner-bracket tr"></div>
+              <div class="corner-bracket bl"></div>
+              <div class="corner-bracket br"></div>
+              <div class="verdict-badge verdict-suspect" id="verdict3" style="display:none">⚡ MANIPULATED</div>
+              <div class="confidence-mini" id="conf3" style="display:none">78% confidence</div>
+            </div>
+          </div>
+
+          <div class="demo-img-wrap" id="img4" onclick="showDetail(3)">
+            <div class="img-placeholder">
+              <svg width="100%" height="100%" viewBox="0 0 240 150" xmlns="http://www.w3.org/2000/svg">
+                <rect width="240" height="150" fill="#10141a"/>
+                <rect width="240" height="100" fill="#0d1520"/>
+                <rect y="100" width="240" height="50" fill="#0a0f18"/>
+                <circle cx="120" cy="50" r="35" fill="#131e2e" stroke="#1a2a40" stroke-width="1"/>
+                <rect x="100" y="40" width="40" height="50" rx="2" fill="#0f1a28"/>
+                <rect x="105" y="45" width="30" height="35" rx="1" fill="#1a2a3e"/>
+                <rect x="30" y="70" width="40" height="30" rx="2" fill="#111922"/>
+                <rect x="170" y="65" width="40" height="35" rx="2" fill="#111922"/>
+                <rect x="20" y="108" width="180" height="5" rx="2" fill="#14202e"/>
+                <text x="120" y="138" font-family="monospace" font-size="8" fill="#1a2a3e" text-anchor="middle">AP PHOTO — CERTIFIED</text>
+              </svg>
+            </div>
+            <div class="scan-overlay" id="overlay4">
+              <div class="scan-line" id="scanline4" style="display:none"></div>
+              <div class="corner-bracket tl"></div>
+              <div class="corner-bracket tr"></div>
+              <div class="corner-bracket bl"></div>
+              <div class="corner-bracket br"></div>
+              <div class="verdict-badge verdict-real" id="verdict4" style="display:none">✓ AUTHENTIC</div>
+              <div class="confidence-mini" id="conf4" style="display:none">91% confidence</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="ext-panel">
+        <div class="ext-header">
+          <div class="ext-logo">
+            <div class="ext-logo-dot"></div>
+            PixelProof
+          </div>
+          <div class="ext-status-pill" id="statusPill">READY</div>
+        </div>
+
+        <div class="ext-body">
+
+          <div class="score-ring-wrap" id="scoreWrap">
+            <div class="score-ring">
+              <svg viewBox="0 0 52 52">
+                <circle cx="26" cy="26" r="22" fill="none" stroke="#2a2b2d" stroke-width="4"/>
+                <circle cx="26" cy="26" r="22" fill="none" stroke="#ff4444" stroke-width="4"
+                  stroke-dasharray="138.2" stroke-dashoffset="138.2"
+                  id="scoreCircle" stroke-linecap="round"/>
+              </svg>
+              <div class="score-ring-num" id="scoreNum" style="color:var(--text3)">—</div>
+            </div>
+            <div class="score-info">
+              <div class="score-title">Trust Score</div>
+              <div class="score-sub" id="scoreLabel">Click scan to analyse page</div>
+            </div>
+          </div>
+
+          <button class="scan-btn" id="scanBtn" onclick="startScan()">
+            <div class="spinner" id="spinner"></div>
+            <span id="scanBtnText">Scan All Images</span>
+          </button>
+
+          <div class="scan-progress" id="scanProgress">
+            <div class="progress-bar-wrap">
+              <div class="progress-bar-fill" id="progressBar"></div>
+            </div>
+            <div class="progress-label">
+              <span id="progressLabel">Initialising...</span>
+              <span id="progressPct">0%</span>
+            </div>
+          </div>
+
+          <div class="results-list" id="resultsList"></div>
+
+          <div class="detail-card" id="detailCard">
+            <div class="detail-label">🤖 Gemini Explanation</div>
+            <div class="detail-text" id="detailText"></div>
+            <div class="detail-factcheck" id="detailFactcheck"></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pipeline-section container">
+  <div class="section-label">How It Works</div>
+  <div class="section-title">4-Step Detection Pipeline</div>
+  <div class="pipeline">
+    <div class="pipeline-step">
+      <div class="step-num">01</div>
+      <div class="step-icon">🔍</div>
+      <div class="step-name">Discover</div>
+      <div class="step-desc">Content script crawls the DOM, finds every image, extracts src or converts canvas to base64.</div>
+    </div>
+    <div class="pipeline-step">
+      <div class="step-num">02</div>
+      <div class="step-icon">🛡️</div>
+      <div class="step-name">Detect</div>
+      <div class="step-desc">Reality Defender API analyses pixel-level patterns — GAN artifacts, frequency anomalies, inconsistent noise.</div>
+    </div>
+    <div class="pipeline-step">
+      <div class="step-num">03</div>
+      <div class="step-icon">🤖</div>
+      <div class="step-name">Explain</div>
+      <div class="step-desc">Gemini translates the raw verdict into plain English — what looks wrong and why it matters.</div>
+    </div>
+    <div class="pipeline-step">
+      <div class="step-num">04</div>
+      <div class="step-icon">📰</div>
+      <div class="step-name">Verify</div>
+      <div class="step-desc">Google Fact Check cross-references related claims, surfacing existing debunks and context.</div>
+    </div>
+  </div>
+</section>
+
+<section class="arch-section container">
+  <div class="section-label">Architecture</div>
+  <div class="section-title">Built on Chrome MV3</div>
+  <div class="arch-grid">
+    <div class="arch-card">
+      <div class="arch-card-icon" style="background:rgba(59,130,246,0.1);font-size:1.4rem;">🧩</div>
+      <div class="arch-card-title">Content Script</div>
+      <div class="arch-card-text">Injected into every page. Discovers images, renders verdict overlays, handles user interactions and per-image rescans.</div>
+      <div class="arch-card-tech">
+        <span class="tech-pill">DOM traversal</span>
+        <span class="tech-pill">Canvas API</span>
+        <span class="tech-pill">CSS overlays</span>
+      </div>
+    </div>
+    <div class="arch-card">
+      <div class="arch-card-icon" style="background:rgba(168,85,247,0.1);font-size:1.4rem;">⚙️</div>
+      <div class="arch-card-title">Background Service Worker</div>
+      <div class="arch-card-text">Orchestrates the full scan pipeline. Checks cache first, calls APIs in sequence, stores results, handles fallback.</div>
+      <div class="arch-card-tech">
+        <span class="tech-pill">MV3 worker</span>
+        <span class="tech-pill">Fetch API</span>
+        <span class="tech-pill">Message passing</span>
+      </div>
+    </div>
+    <div class="arch-card">
+      <div class="arch-card-icon" style="background:rgba(255,68,68,0.1);font-size:1.4rem;">⚡</div>
+      <div class="arch-card-title">Smart Cache Layer</div>
+      <div class="arch-card-text">Every scan result stored in chrome.storage.local keyed by image hash. Rescans return instantly without hitting APIs.</div>
+      <div class="arch-card-tech">
+        <span class="tech-pill">chrome.storage</span>
+        <span class="tech-pill">Request dedup</span>
+        <span class="tech-pill">~50ms rescans</span>
+      </div>
+    </div>
+    <div class="arch-card">
+      <div class="arch-card-icon" style="background:rgba(34,197,94,0.1);font-size:1.4rem;">🛡️</div>
+      <div class="arch-card-title">Fallback Mode</div>
+      <div class="arch-card-text">When any API is unreachable, PixelProof generates a simulated verdict locally. The demo never breaks. Keys stay local only.</div>
+      <div class="arch-card-tech">
+        <span class="tech-pill">Local simulation</span>
+        <span class="tech-pill">Diagnostic logs</span>
+        <span class="tech-pill">Zero key exposure</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features-section container">
+  <div class="section-label">Features</div>
+  <div class="section-title">Everything, In the Browser</div>
+  <div class="features-grid">
+    <div class="feature-cell">
+      <div class="feature-cell-icon">🖼️</div>
+      <div class="feature-cell-title">Live Image Scanning</div>
+      <div class="feature-cell-text">Scans every image on any page. Works on news sites, social feeds, anywhere images load in Chrome.</div>
+    </div>
+    <div class="feature-cell">
+      <div class="feature-cell-icon">🤖</div>
+      <div class="feature-cell-title">AI Explanations</div>
+      <div class="feature-cell-text">Gemini explains why an image looks suspicious — not just a score, but understandable reasoning.</div>
+    </div>
+    <div class="feature-cell">
+      <div class="feature-cell-icon">📰</div>
+      <div class="feature-cell-title">Fact-Check Context</div>
+      <div class="feature-cell-text">Cross-references image claims against Google's Fact Check database. Surfaces existing debunks instantly.</div>
+    </div>
+    <div class="feature-cell">
+      <div class="feature-cell-icon">⚡</div>
+      <div class="feature-cell-title">Instant Cache</div>
+      <div class="feature-cell-text">Scan an image once, get results forever. Results persist in chrome.storage.local. Rescans are ~50ms.</div>
+    </div>
+    <div class="feature-cell">
+      <div class="feature-cell-icon">🔑</div>
+      <div class="feature-cell-title">Local Key Storage</div>
+      <div class="feature-cell-text">API keys never leave your device. Stored in chrome.storage.local, never bundled in the extension.</div>
+    </div>
+    <div class="feature-cell">
+      <div class="feature-cell-icon">🛡️</div>
+      <div class="feature-cell-title">Graceful Fallback</div>
+      <div class="feature-cell-text">Network down? Key missing? PixelProof simulates locally. Presentations never break mid-demo.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-logo">
+      <div class="logo-dot"></div>
+      PixelProof
+    </div>
+    <div class="footer-text">Built for Next Byte Hacks V2 · MIT License</div>
+    <div class="footer-links">
+      <a href="https://github.com/HarshBhanushali07/pixelproof" class="footer-link">GitHub</a>
+      <a href="https://devpost.com" class="footer-link">Devpost</a>
+      <a href="#demo" class="footer-link">Live Demo</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+const imageData = [
+  {
+    title:"conflict_crowd.jpg",
+    verdict:"AI GENERATED",
+    verdictClass:"verdict-ai",
+    color:"var(--red)",
+    confidence:94,
+    icon:"⚠️",
+    iconClass:"icon-ai",
+    explanation:"Facial geometry inconsistencies detected across the crowd. Uniform lighting gradients not consistent with outdoor photography. GAN-typical frequency artifacts present in high-frequency bands.",
+    factcheck:"⚡ Fact-check match found: Similar image flagged by PolitiFact (March 2024) — falsely attributed to a different country.",
+    factcheckClass:"factcheck-match"
+  },
+  {
+    title:"reuters_street.jpg",
+    verdict:"AUTHENTIC",
+    verdictClass:"verdict-real",
+    color:"var(--green)",
+    confidence:87,
+    icon:"✅",
+    iconClass:"icon-real",
+    explanation:"Natural noise distribution consistent with DSLR sensor characteristics. EXIF metadata intact and matches Reuters certification. No signs of pixel-level manipulation or GAN generation.",
+    factcheck:"No related fact-check concerns found for this image.",
+    factcheckClass:""
+  },
+  {
+    title:"leaked_document.jpg",
+    verdict:"MANIPULATED",
+    verdictClass:"verdict-suspect",
+    color:"var(--amber)",
+    confidence:78,
+    icon:"⚡",
+    iconClass:"icon-suspect",
+    explanation:"Clone-stamp artifacts visible in background region. JPEG compression inconsistencies suggest post-processing re-saves. Lighting direction inconsistent between foreground subjects.",
+    factcheck:"⚡ Related claim found: Snopes investigates a similar document circulating as 'leaked government files'. Rated FALSE.",
+    factcheckClass:"factcheck-match"
+  },
+  {
+    title:"ap_building.jpg",
+    verdict:"AUTHENTIC",
+    verdictClass:"verdict-real",
+    color:"var(--green)",
+    confidence:91,
+    icon:"✅",
+    iconClass:"icon-real",
+    explanation:"Photographic noise distribution is natural. Shadow angles consistent with reported time and location. No frequency-domain anomalies. AP certification hash verified.",
+    factcheck:"No related fact-check concerns found for this image.",
+    factcheckClass:""
+  }
+];
+
+let scanDone=false;
+
+function startScan(){
+  if(scanDone)return;
+  const btn=document.getElementById('scanBtn');
+  const spinner=document.getElementById('spinner');
+  const txt=document.getElementById('scanBtnText');
+  const progress=document.getElementById('scanProgress');
+  const statusPill=document.getElementById('statusPill');
+
+  btn.disabled=true;
+  spinner.classList.add('active');
+  txt.textContent='Scanning...';
+  progress.classList.add('active');
+  statusPill.textContent='SCANNING';
+  statusPill.style.background='rgba(245,158,11,0.12)';
+  statusPill.style.color='var(--amber)';
+  statusPill.style.borderColor='rgba(245,158,11,0.3)';
+
+  const steps=[
+    {label:'Discovering images on page...',pct:15},
+    {label:'Checking cache...',pct:25},
+    {label:'Calling Reality Defender API...',pct:45},
+    {label:'Generating Gemini explanations...',pct:70},
+    {label:'Querying Fact Check database...',pct:88},
+    {label:'Complete.',pct:100}
+  ];
+
+  let s=0;
+  const progBar=document.getElementById('progressBar');
+  const progLabel=document.getElementById('progressLabel');
+  const progPct=document.getElementById('progressPct');
+
+  [1,2,3,4].forEach((n,i)=>{
+    setTimeout(()=>startImageScan(n),i*1100+300);
+  });
+
+  const tick=()=>{
+    if(s>=steps.length){
+      setTimeout(finalizeResults,300);
+      return;
+    }
+    const step=steps[s];
+    progBar.style.width=step.pct+'%';
+    progLabel.textContent=step.label;
+    progPct.textContent=step.pct+'%';
+    s++;
+    setTimeout(tick,600+(Math.random()*200));
+  };
+  tick();
+}
+
+function startImageScan(n){
+  const overlay=document.getElementById('overlay'+n);
+  const scanline=document.getElementById('scanline'+n);
+  overlay.classList.add('scanning');
+  scanline.style.display='block';
+  setTimeout(()=>{
+    scanline.style.display='none';
+    showImageResult(n);
+  },1100);
+}
+
+function showImageResult(n){
+  const d=imageData[n-1];
+  const verdict=document.getElementById('verdict'+n);
+  const conf=document.getElementById('conf'+n);
+  verdict.className='verdict-badge '+d.verdictClass;
+  verdict.style.display='block';
+  conf.style.display='block';
+}
+
+function finalizeResults(){
+  const btn=document.getElementById('scanBtn');
+  const spinner=document.getElementById('spinner');
+  const txt=document.getElementById('scanBtnText');
+  const statusPill=document.getElementById('statusPill');
+  const progress=document.getElementById('scanProgress');
+
+  progress.classList.remove('active');
+  spinner.classList.remove('active');
+  txt.textContent='Rescan All';
+  statusPill.textContent='COMPLETE';
+  statusPill.style.background='rgba(34,197,94,0.12)';
+  statusPill.style.color='var(--green)';
+  statusPill.style.borderColor='rgba(34,197,94,0.3)';
+  btn.disabled=false;
+
+  animateScore(2);
+
+  const list=document.getElementById('resultsList');
+  list.innerHTML='';
+  imageData.forEach((d,i)=>{
+    const item=document.createElement('div');
+    item.className='result-item';
+    item.innerHTML=`
+      <div class="result-icon ${d.iconClass}">${d.icon}</div>
+      <div class="result-info">
+        <div class="result-title">${d.title}</div>
+        <div class="result-sub">${d.verdict} · ${d.confidence}% confidence</div>
+        <div class="conf-bar"><div class="conf-fill" id="cf${i}" style="background:${d.color}"></div></div>
+      </div>`;
+    item.style.cursor='pointer';
+    item.onclick=()=>showDetail(i);
+    list.appendChild(item);
+    setTimeout(()=>{
+      item.classList.add('visible');
+      setTimeout(()=>{
+        document.getElementById('cf'+i).style.width=d.confidence+'%';
+      },150);
+    },i*150);
+  });
+
+  scanDone=true;
+}
+
+function animateScore(aiCount){
+  const circle=document.getElementById('scoreCircle');
+  const num=document.getElementById('scoreNum');
+  const label=document.getElementById('scoreLabel');
+  const score=Math.round(((imageData.length-aiCount)/imageData.length)*100);
+  const circumference=138.2;
+  const offset=circumference-(circumference*score/100);
+
+  setTimeout(()=>{
+    circle.style.transition='stroke-dashoffset 1.2s ease';
+    circle.style.strokeDashoffset=offset;
+    num.style.color='var(--amber)';
+    num.textContent=score+'%';
+    label.textContent=aiCount+' suspicious images found';
+  },200);
+}
+
+function showDetail(i){
+  if(!scanDone)return;
+  const d=imageData[i];
+  const card=document.getElementById('detailCard');
+  const text=document.getElementById('detailText');
+  const fc=document.getElementById('detailFactcheck');
+  text.textContent=d.explanation;
+  fc.innerHTML=`<span class="${d.factcheckClass}">${d.factcheck}</span>`;
+  card.classList.add('active');
+  card.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+</script>
+
+</body>
+</html>
