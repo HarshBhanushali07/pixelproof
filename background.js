@@ -16,7 +16,7 @@ const inFlightScans = new Map();
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'scanImage') {
-    handleScanImage(request.imageUrl, request.imageBase64, request.pageUrl).then(sendResponse).catch((err) => {
+    handleScanImage(request.imageUrl, request.imageBase64, request.pageUrl, request.demoIndex).then(sendResponse).catch((err) => {
       console.error('handleScanImage error', err);
       sendResponse({ verdict: 'error', confidence: 0, error: err?.message });
     });
@@ -63,7 +63,7 @@ function sendMessageToTab(tabId, message, retry = true) {
   });
 }
 
-async function handleScanImage(imageUrl, imageBase64, pageUrl) {
+async function handleScanImage(imageUrl, imageBase64, pageUrl, demoIndex = 0) {
   // Use imageUrl as key for cache/in-flight dedupe; fallback to a trimmed base64 key
   const key = imageUrl || (typeof imageBase64 === 'string' ? ('base64:' + imageBase64.slice(0, 80)) : 'unknown');
 
@@ -90,24 +90,34 @@ async function handleScanImage(imageUrl, imageBase64, pageUrl) {
     const exifMetadata = extractExifData(imageBase64 || '');
 
     // 1. Reality Defender
-    let detection = await scanWithRealityDefender(imageBase64 || imageUrl);
+    let detection = await scanWithRealityDefender(imageBase64 || imageUrl, demoIndex);
     if (detection.verdict === 'error') return detection;
 
-    // 2. Gemini Explanation
-    const gemini = await explainWithGemini(detection.verdict, detection.confidence, imageUrl);
+    let explanation = detection.explanation;
+    let aiSource = detection.aiSource;
+    let facts = detection.facts || [];
 
-    // 3. Fact Check
-    const facts = await checkFacts('deepfake image');
+    if (!detection.demoMode) {
+      // 2. Gemini Explanation
+      const gemini = await explainWithGemini(detection.verdict, detection.confidence, imageUrl);
+      explanation = gemini.explanation;
+      aiSource = gemini.aiSource;
+
+      // 3. Fact Check
+      facts = await checkFacts('deepfake image');
+    }
 
     const result = {
       verdict: detection.verdict,
       confidence: detection.confidence,
-      explanation: gemini.explanation,
-      aiSource: gemini.aiSource,
+      explanation: explanation,
+      aiSource: aiSource,
       facts: facts,
       imageUrl: imageUrl,
       pageUrl: pageUrl,
-      exif: exifMetadata
+      exif: exifMetadata,
+      demoMode: detection.demoMode || false,
+      rawResponse: detection.rawResponse || null
     };
 
     // Save Cache if we have a usable imageUrl

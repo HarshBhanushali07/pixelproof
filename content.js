@@ -133,6 +133,7 @@ async function doScanOnImage(imgElement, overlayData = null) {
 
     const base64 = await getImageAsBase64(imgElement);
     const imageUrl = imgElement.src;
+    const demoIndex = getAllImages().indexOf(imgElement);
 
     const response = await new Promise((resolve) => {
       try {
@@ -140,7 +141,8 @@ async function doScanOnImage(imgElement, overlayData = null) {
           action: 'scanImage',
           imageUrl: imageUrl,
           imageBase64: base64,
-          pageUrl: window.location.href
+          pageUrl: window.location.href,
+          demoIndex
         }, (res) => {
           if (chrome.runtime.lastError) {
             resolve(null);

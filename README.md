@@ -187,18 +187,28 @@ pixelproof/
 ├── manifest.json               # MV3 manifest — permissions, bg worker, options
 ├── background.js               # Scan orchestration, caching, tab messaging
 ├── content.js                  # Image discovery, DOM overlays, per-image UI
+├── styles.css                  # Shared content script styles
+├── config.example.js           # Local API key template
+├── .env.example                # Environment template used by the config generator
 │
 ├── popup/
 │   ├── popup.html              # Extension dashboard
-│   └── popup.js                # Scan trigger, results renderer
+│   ├── popup.js                # Scan trigger, results renderer
+│   └── popup.css               # Popup styling
 │
 ├── options/
 │   ├── options.html            # API key settings page
 │   └── options.js              # chrome.storage.local key management
+
+├── panel/
+│   ├── panel.html              # Slide-in analysis panel
+│   ├── panel.js                # Panel interactions + share/listen actions
+│   └── panel.css               # Panel layout and glassmorphism styling
 │
 ├── utils/
 │   ├── api.js                  # Reality Defender + Gemini + Fact Check wrappers
-│   └── cache.js                # Storage-backed result cache
+│   ├── cache.js                # Storage-backed result cache
+│   └── dom.js                  # Image discovery and overlay helpers
 │
 ├── scripts/
 │   └── generate_config.js      # .env → config.js for local key injection
@@ -207,8 +217,22 @@ pixelproof/
 │   ├── dashboard-preview.svg
 │   ├── overlay-preview.svg
 │   └── settings-preview.svg
+
+├── docs/
+│   ├── imp.md
+│   ├── master.md
+│   └── prd_extracted.txt
+
+├── icons/
+│   ├── icon16.png
+│   ├── icon48.png
+│   └── icon128.png
+
+├── DEMO_CHECKLIST.md          # Recorder-friendly demo order and notes
+├── reference_repo/             # Reference structure from the starter project
+├── package.json                # Minimal npm metadata for scripts
 │
-└── .env.example                # Key template (never commit real keys)
+└── README.md                   # Project overview and setup
 ```
 
 ---
@@ -247,10 +271,10 @@ git clone https://github.com/YOUR_USERNAME/pixelproof.git
 - Paste keys into the fields → Save
 - Keys are stored in `chrome.storage.local` (never sent anywhere)
 
-**Option B — Environment File**
+**Option B — Config Template**
 ```bash
-cp .env.example .env
-# Edit .env with your keys
+# Copy .env.example to .env and fill in your keys
+# Then generate config.js for the extension runtime
 node scripts/generate_config.js
 ```
 
@@ -265,6 +289,12 @@ node scripts/generate_config.js
 ### 3. Reload & Go
 
 Reload the extension in `chrome://extensions` after saving keys — then start scanning.
+
+### 4. Demo Prep
+
+- Use `DEMO_CHECKLIST.md` for the exact four-image presentation order.
+- For the cleanest recording, keep the demo on a local page with controlled images.
+- Use the popup last if you want to show bulk scanning after the individual badge flow.
 
 ---
 

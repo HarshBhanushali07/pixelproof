@@ -5,11 +5,12 @@
 ## Preparation
 - [ ] Ensure `config.js` is fully loaded with active API keys.
 - [ ] Reload extension in `chrome://extensions/`.
-- [ ] PRE-SCAN these images once so they are cached (ensures instant &lt; 1 sec results in the video):
-  1. Real Image: BBC News homepage photo
-  2. Fake Image 1: Pope in Balenciaga jacket (Twitter/X)
-  3. Fake Image 2: Midjourney AI portrait (Reddit)
-  4. WhatsApp Web: A forwarded AI image in a chat
+- [ ] For the demo sequence, use a page with at least four large images in this order:
+  1. Obvious AI image for the first scan
+  2. Borderline image for the second scan
+  3. Natural real photo for the third scan
+  4. Obvious AI image for the fourth scan
+- [ ] Pre-scan them once if you want instant results in the recording.
 
 ## Video Script / Flow
 
@@ -20,12 +21,13 @@
 
 **0:10 – 0:25 | Real Image Test**
 - Go to a live news site (e.g., BBC).
-- Hover over a real photo. Click the scan button.
+- Hover over the third image in your prepared demo set, or a real news photo if you are doing the full live version.
+- Click the scan button.
 - Show the GREEN badge appear.
 
 **0:25 – 0:45 | Fake Image & Detail Panel**
-- Open a tab with a known viral fake image (e.g., Pope in puffy coat).
-- Hover and scan. Show the RED badge (94% AI Generated).
+- Open the first prepared demo image.
+- Hover and scan. Show the RED badge (high AI confidence).
 - Click the badge. Show the slide-in glassmorphism panel.
 - Read out the Gemini explanation and AI tool guess.
 - Highlight the Reverse Search & Fact Check buttons.
@@ -34,6 +36,7 @@
 - Open a page with multiple images.
 - Click the extension icon.
 - Click "Scan All Images". Watch multiple badges pop up simultaneously.
+- Make sure the first four images land in the exact sequence: AI, suspicious, real, AI.
 - Show the Trust Score gauge drop to Red/Yellow.
 
 **1:05 – 1:30 | WhatsApp Web**
@@ -45,3 +48,9 @@
 **1:30 – 2:00 | Outro**
 - Recap: Fast, free, plain English explanations, protects users from misinformation.
 - End recording.
+
+## Video Tips
+- Keep the cursor slow and deliberate.
+- Pause for half a second after each badge appears so the confidence number is visible.
+- Open the panel only on the first AI result and the last AI result so the audience sees the pattern change.
+- If you need a shorter demo, skip the WhatsApp segment and focus on the four-image sequence, the badge colors, and the panel.

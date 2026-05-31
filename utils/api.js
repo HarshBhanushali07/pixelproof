@@ -5,6 +5,55 @@
 
 import { CONFIG } from '../config.js';
 
+const DEMO_PRESETS = [
+  {
+    verdict: 'fake',
+    confidence: 96,
+    aiSource: 'Midjourney',
+    explanation: 'This image looks strongly AI-generated. The lighting is too even, the texture feels airbrushed, and the background details do not line up naturally.',
+    facts: []
+  },
+  {
+    verdict: 'uncertain',
+    confidence: 70,
+    aiSource: 'Stable Diffusion',
+    explanation: 'This one sits in the middle. The image looks mostly believable, but the edges and shadows feel slightly too clean, so it stays in the suspicious range.',
+    facts: []
+  },
+  {
+    verdict: 'real',
+    confidence: 18,
+    aiSource: 'Unknown',
+    explanation: 'This image reads like a normal camera photo. The lighting, facial details, and background perspective all look natural and consistent.',
+    facts: []
+  },
+  {
+    verdict: 'fake',
+    confidence: 91,
+    aiSource: 'DALL-E',
+    explanation: 'This image looks AI-generated again. The facial structure is too symmetrical, small details blur together, and the background feels synthetic.',
+    facts: []
+  }
+];
+
+function getDemoPreset(demoIndex = 0) {
+  const normalizedIndex = Number.isInteger(demoIndex) && demoIndex >= 0 ? demoIndex : 0;
+  return DEMO_PRESETS[Math.min(normalizedIndex, DEMO_PRESETS.length - 1)];
+}
+
+function buildDemoResult(demoIndex = 0, reason = 'demo_fallback') {
+  const preset = getDemoPreset(demoIndex);
+  return {
+    ...preset,
+    demoMode: true,
+    rawResponse: {
+      simulated: true,
+      reason,
+      demoIndex
+    }
+  };
+}
+
 // Prefer keys stored in chrome.storage.local (set via Options page). Fallback to config.js values.
 async function getRuntimeConfig() {
   if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
@@ -28,7 +77,7 @@ async function getRuntimeConfig() {
  * @param {string} base64Image 
  * @returns {Promise<{verdict: string, confidence: number, rawResponse: any}>}
  */
-export async function scanWithRealityDefender(base64Image) {
+export async function scanWithRealityDefender(base64Image, demoIndex = 0) {
   try {
     const stored = await getRuntimeConfig();
     const apiKey = stored.REALITY_DEFENDER_API_KEY || CONFIG?.REALITY_DEFENDER_API_KEY || '';
@@ -36,7 +85,7 @@ export async function scanWithRealityDefender(base64Image) {
     // Fallback if Reality Defender is not configured or unavailable (Mocking for the hackathon demo if API keys are missing)
     if (!apiKey || apiKey === 'your_reality_defender_key_here') {
       console.warn("Reality Defender API key missing. Using fallback detection simulation.");
-      return simulateDetection();
+      return buildDemoResult(demoIndex, 'missing_api_key');
     }
 
     // If caller passed a URL instead of base64, try to fetch it and convert to base64.
@@ -107,7 +156,7 @@ export async function scanWithRealityDefender(base64Image) {
 
       console.warn('Connectivity checks:', checks);
 
-      const simulated = simulateDetection();
+      const simulated = buildDemoResult(demoIndex, 'fetch_error');
       simulated.rawResponse = { simulated: true, error: fetchErr?.message, diagnostics: checks };
       return simulated;
     }
@@ -202,19 +251,6 @@ export async function checkFacts(query) {
     console.error("Fact Check API Error:", error);
     return [];
   }
-}
-
-/**
- * Simulates detection for demo fallback
- */
-function simulateDetection() {
-  const isFake = Math.random() > 0.5;
-  const confidence = isFake ? Math.floor(Math.random() * 30) + 71 : Math.floor(Math.random() * 39);
-  return {
-    verdict: isFake ? 'fake' : 'real',
-    confidence,
-    rawResponse: { simulated: true }
-  };
 }
 
 /**
