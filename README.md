@@ -1,5 +1,11 @@
 # 🔍 PixelProof — See Through the Lie
 
+**Owner:** Harsh Bhanushali  \
+**Hackathon:** Next Byte Hacks V2  \
+**Repository:** [HarshBhanushali07/pixelproof](https://github.com/HarshBhanushali07/pixelproof)  \
+**Contact:** [harsh@dualmindlab.tech](mailto:harsh@dualmindlab.tech) / [harshu.dev@outlook.com](mailto:harshu.dev@outlook.com)  \
+**Release status:** Demo-only for now, load unpacked locally
+
 <div align="center">
 
 <img src="assets/dashboard-preview.svg" alt="PixelProof Dashboard" width="700"/>
@@ -12,10 +18,11 @@
 [![Manifest V3](https://img.shields.io/badge/Manifest-V3-7c3aed?style=for-the-badge)](https://developer.chrome.com/docs/extensions/develop/migrate/what-is-mv3)
 [![Version](https://img.shields.io/badge/Version-1.0.0-111827?style=for-the-badge)](#)
 [![Browser Support](https://img.shields.io/badge/Browser-Chrome%20%2B%20Edge-4285F4?style=for-the-badge)](#browser-support)
+[![Owner](https://img.shields.io/badge/Made_by-Harsh_Bhanushali-111827?style=for-the-badge)](https://github.com/HarshBhanushali07)
+[![Hackathon](https://img.shields.io/badge/Next_Byte_Hacks-V2-06b6d4?style=for-the-badge)](https://devpost.com/)
 [![Reality Defender](https://img.shields.io/badge/Reality_Defender-API-ef4444?style=for-the-badge)](https://www.realitydefender.com/)
 [![Gemini AI](https://img.shields.io/badge/Gemini-AI-1a73e8?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
 [![Google Fact Check](https://img.shields.io/badge/Google-Fact_Check-34a853?style=for-the-badge&logo=google&logoColor=white)](https://developers.google.com/fact-check)
-[![Hackathon](https://img.shields.io/badge/Next_Byte_Hacks-V2-06b6d4?style=for-the-badge)](https://devpost.com/)
 [![MIT License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
 [![Demo Safe](https://img.shields.io/badge/Demo-Safe_Fallback-22c55e?style=for-the-badge)](#fallback-mode)
 [![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen?style=for-the-badge)]()
@@ -74,16 +81,20 @@ PixelProof is useful for demos and real-world triage, but it is not a perfect tr
 
 ## 🚀 Run Locally
 
+PixelProof is not released in the Chrome Web Store yet. Use the unpacked extension flow below.
+
 1. Clone the repository.
-    ```bash
-    git clone https://github.com/YOUR_USERNAME/pixelproof.git
-    cd pixelproof
-    ```
+   ```bash
+   git clone https://github.com/HarshBhanushali07/pixelproof.git
+   cd pixelproof
+   ```
 2. Open `chrome://extensions` in Chrome or Edge.
-3. Enable **Developer mode** using the toggle in the top-right corner.
-4. Click **Load unpacked** and select the `pixelproof/` folder.
-5. The PixelProof extension should appear in the toolbar.
-6. Open the extension, add your API keys in Settings, and reload the extension if needed.
+3. Turn on **Developer mode** in the top-right corner.
+4. Click **Load unpacked**.
+5. Select the repository folder you just cloned.
+6. Confirm the PixelProof icon appears in the toolbar.
+7. Open the extension, go to Settings, and add your API keys if you want live detection.
+8. Reload the extension after saving keys if the UI asks for it.
 
 If you want the demo-safe experience, you can leave the keys empty and use the built-in fallback mode.
 
@@ -407,6 +418,15 @@ Invoke-WebRequest -Uri 'https://api.realitydefender.com/' -UseBasicParsing
 Misinformation spreads at the speed of a scroll. By the time a fact-checker publishes a correction, millions of people have already seen the fake image and formed an opinion.
 
 PixelProof puts the detection tool **right where the content is** — in the browser, in real time, on every page. It doesn't ask users to copy URLs into some external tool. It works where the harm is already happening.
+
+---
+
+## 👤 Credits
+
+- **Project owner and builder:** Harsh Bhanushali
+- **Hackathon entry:** Next Byte Hacks V2
+- **Product focus:** Chrome extension-first detection workflow with demo landing page support
+- **Design intent:** Clean, honest, browser-native presentation for judges and reviewers
 
 ---
 

@@ -1,6 +1,14 @@
 # Contributing to PixelProof
 
+[![Owner](https://img.shields.io/badge/Owner-Harsh_Bhanushali-111827?style=for-the-badge)](https://github.com/HarshBhanushali07)
+[![Hackathon](https://img.shields.io/badge/Next_Byte_Hacks-V2-06b6d4?style=for-the-badge)](https://devpost.com/)
+[![Extension](https://img.shields.io/badge/Chrome-Extension-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)](https://developer.chrome.com/docs/extensions/)
+
 Thanks for helping improve PixelProof.
+
+Primary maintainer: Harsh Bhanushali  \
+Contact: harsh@dualmindlab.tech / harshu.dev@outlook.com  \
+Release status: demo-only unpacked extension for now
 
 ## What to work on
 - Bug fixes
@@ -36,6 +44,10 @@ Thanks for helping improve PixelProof.
 - Keep the vanilla HTML/CSS/JS structure.
 - Avoid unnecessary dependencies.
 - Prefer readable, maintainable code over clever code.
+
+## Ownership notes
+
+PixelProof is the Next Byte Hacks V2 project of Harsh Bhanushali, so keep changes aligned with the extension-first demo experience and the honest browser-native story the repo already tells.
 
 ## Questions
 If you are unsure where a change should go, open an issue or leave a note in the pull request with the exact file and behavior you want to improve.
